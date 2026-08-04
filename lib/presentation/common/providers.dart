@@ -5,18 +5,15 @@ import '../../data/local/database/app_database.dart';
 import '../../data/repositories/drift_book_repository.dart';
 import '../../data/repositories/drift_filter_profile_repository.dart';
 import '../../data/repositories/drift_reading_progress_repository.dart';
-import '../../data/repositories/drift_reading_session_repository.dart';
 import '../../data/repositories/drift_shelf_repository.dart';
 import '../../domain/entities/book.dart';
 import '../../domain/entities/reading_progress.dart';
-import '../../domain/entities/reading_session.dart';
 import '../../domain/entities/reading_stats.dart';
 import '../../domain/entities/shelf.dart';
 import '../../domain/repositories/book_repository.dart';
 import '../../domain/repositories/cover_extractor.dart';
 import '../../domain/repositories/filter_profile_repository.dart';
 import '../../domain/repositories/reading_progress_repository.dart';
-import '../../domain/repositories/reading_session_repository.dart';
 import '../../domain/repositories/shelf_repository.dart';
 import '../../domain/usecases/delete_book_usecase.dart';
 import '../../domain/usecases/delete_shelf_usecase.dart';
@@ -40,10 +37,6 @@ final readingProgressRepositoryProvider = Provider<ReadingProgressRepository>(
   (ref) => DriftReadingProgressRepository(ref.watch(databaseProvider)),
 );
 
-final readingSessionRepositoryProvider = Provider<ReadingSessionRepository>(
-  (ref) => DriftReadingSessionRepository(ref.watch(databaseProvider)),
-);
-
 final shelfRepositoryProvider = Provider<ShelfRepository>(
   (ref) => DriftShelfRepository(ref.watch(databaseProvider)),
 );
@@ -63,7 +56,6 @@ final deleteBookUseCaseProvider = Provider<DeleteBookUseCase>(
   (ref) => DeleteBookUseCase(
     ref.watch(bookRepositoryProvider),
     ref.watch(readingProgressRepositoryProvider),
-    ref.watch(readingSessionRepositoryProvider),
   ),
 );
 
@@ -86,44 +78,8 @@ final readingProgressProvider = StreamProvider.family<ReadingProgress?, String>(
   (ref, bookId) => ref.watch(readingProgressRepositoryProvider).watch(bookId),
 );
 
-final bookReadingSessionsProvider =
-    StreamProvider.family<List<ReadingSession>, String>(
-      (ref, bookId) =>
-          ref.watch(readingSessionRepositoryProvider).watchForBook(bookId),
-    );
-
-final allReadingSessionsProvider = StreamProvider<List<ReadingSession>>(
-  (ref) => ref.watch(readingSessionRepositoryProvider).watchAll(),
-);
-
-final bookReadingStatsProvider = Provider.family<BookReadingStats, String>((
-  ref,
-  bookId,
-) {
-  final sessions =
-      ref.watch(bookReadingSessionsProvider(bookId)).valueOrNull ??
-      const <ReadingSession>[];
-  if (sessions.isEmpty) return BookReadingStats.empty;
-  final total = sessions.fold<Duration>(
-    Duration.zero,
-    (sum, session) => sum + session.duration,
-  );
-  return BookReadingStats(
-    totalReadingTime: total,
-    sessionCount: sessions.length,
-  );
-});
-
 final globalReadingStatsProvider = Provider<GlobalReadingStats>((ref) {
   final books = ref.watch(booksProvider).valueOrNull ?? const <Book>[];
-  final sessions =
-      ref.watch(allReadingSessionsProvider).valueOrNull ??
-      const <ReadingSession>[];
-
-  final totalReadingTime = sessions.fold<Duration>(
-    Duration.zero,
-    (sum, session) => sum + session.duration,
-  );
 
   var completed = 0;
   var inProgress = 0;
@@ -142,24 +98,5 @@ final globalReadingStatsProvider = Provider<GlobalReadingStats>((ref) {
     totalBooks: books.length,
     completedBooks: completed,
     inProgressBooks: inProgress,
-    totalReadingTime: totalReadingTime,
   );
 });
-
-/// Libri con almeno un minuto di lettura registrato, dal più letto al meno
-/// letto — usati per la lista "Più letti" nella schermata statistiche.
-final booksRankedByReadingTimeProvider =
-    Provider<List<(Book, BookReadingStats)>>((ref) {
-      final books = ref.watch(booksProvider).valueOrNull ?? const <Book>[];
-      final entries =
-          books
-              .map(
-                (book) => (book, ref.watch(bookReadingStatsProvider(book.id))),
-              )
-              .where((entry) => entry.$2.totalReadingTime > Duration.zero)
-              .toList()
-            ..sort(
-              (a, b) => b.$2.totalReadingTime.compareTo(a.$2.totalReadingTime),
-            );
-      return entries;
-    });

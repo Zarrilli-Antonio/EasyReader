@@ -940,6 +940,30 @@ class $FilterProfilesTable extends FilterProfiles
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _contrastMeta = const VerificationMeta(
+    'contrast',
+  );
+  @override
+  late final GeneratedColumn<double> contrast = GeneratedColumn<double>(
+    'contrast',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1),
+  );
+  static const VerificationMeta _colorTemperatureMeta = const VerificationMeta(
+    'colorTemperature',
+  );
+  @override
+  late final GeneratedColumn<double> colorTemperature = GeneratedColumn<double>(
+    'color_temperature',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   static const VerificationMeta _fontSizeMeta = const VerificationMeta(
     'fontSize',
   );
@@ -952,6 +976,18 @@ class $FilterProfilesTable extends FilterProfiles
     requiredDuringInsert: false,
     defaultValue: const Constant(16),
   );
+  static const VerificationMeta _lineHeightMeta = const VerificationMeta(
+    'lineHeight',
+  );
+  @override
+  late final GeneratedColumn<double> lineHeight = GeneratedColumn<double>(
+    'line_height',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1.4),
+  );
   static const VerificationMeta _paperFilterEnabledMeta =
       const VerificationMeta('paperFilterEnabled');
   @override
@@ -963,6 +999,36 @@ class $FilterProfilesTable extends FilterProfiles
     requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'CHECK ("paper_filter_enabled" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _blueLightFilterEnabledMeta =
+      const VerificationMeta('blueLightFilterEnabled');
+  @override
+  late final GeneratedColumn<bool> blueLightFilterEnabled =
+      GeneratedColumn<bool>(
+        'blue_light_filter_enabled',
+        aliasedName,
+        false,
+        type: DriftSqlType.bool,
+        requiredDuringInsert: false,
+        defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("blue_light_filter_enabled" IN (0, 1))',
+        ),
+        defaultValue: const Constant(false),
+      );
+  static const VerificationMeta _useDyslexiaFontMeta = const VerificationMeta(
+    'useDyslexiaFont',
+  );
+  @override
+  late final GeneratedColumn<bool> useDyslexiaFont = GeneratedColumn<bool>(
+    'use_dyslexia_font',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("use_dyslexia_font" IN (0, 1))',
     ),
     defaultValue: const Constant(false),
   );
@@ -989,8 +1055,13 @@ class $FilterProfilesTable extends FilterProfiles
     overlayColor,
     overlayOpacity,
     brightness,
+    contrast,
+    colorTemperature,
     fontSize,
+    lineHeight,
     paperFilterEnabled,
+    blueLightFilterEnabled,
+    useDyslexiaFont,
     isDefault,
   ];
   @override
@@ -1055,10 +1126,31 @@ class $FilterProfilesTable extends FilterProfiles
         brightness.isAcceptableOrUnknown(data['brightness']!, _brightnessMeta),
       );
     }
+    if (data.containsKey('contrast')) {
+      context.handle(
+        _contrastMeta,
+        contrast.isAcceptableOrUnknown(data['contrast']!, _contrastMeta),
+      );
+    }
+    if (data.containsKey('color_temperature')) {
+      context.handle(
+        _colorTemperatureMeta,
+        colorTemperature.isAcceptableOrUnknown(
+          data['color_temperature']!,
+          _colorTemperatureMeta,
+        ),
+      );
+    }
     if (data.containsKey('font_size')) {
       context.handle(
         _fontSizeMeta,
         fontSize.isAcceptableOrUnknown(data['font_size']!, _fontSizeMeta),
+      );
+    }
+    if (data.containsKey('line_height')) {
+      context.handle(
+        _lineHeightMeta,
+        lineHeight.isAcceptableOrUnknown(data['line_height']!, _lineHeightMeta),
       );
     }
     if (data.containsKey('paper_filter_enabled')) {
@@ -1067,6 +1159,24 @@ class $FilterProfilesTable extends FilterProfiles
         paperFilterEnabled.isAcceptableOrUnknown(
           data['paper_filter_enabled']!,
           _paperFilterEnabledMeta,
+        ),
+      );
+    }
+    if (data.containsKey('blue_light_filter_enabled')) {
+      context.handle(
+        _blueLightFilterEnabledMeta,
+        blueLightFilterEnabled.isAcceptableOrUnknown(
+          data['blue_light_filter_enabled']!,
+          _blueLightFilterEnabledMeta,
+        ),
+      );
+    }
+    if (data.containsKey('use_dyslexia_font')) {
+      context.handle(
+        _useDyslexiaFontMeta,
+        useDyslexiaFont.isAcceptableOrUnknown(
+          data['use_dyslexia_font']!,
+          _useDyslexiaFontMeta,
         ),
       );
     }
@@ -1109,13 +1219,33 @@ class $FilterProfilesTable extends FilterProfiles
         DriftSqlType.double,
         data['${effectivePrefix}brightness'],
       )!,
+      contrast: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}contrast'],
+      )!,
+      colorTemperature: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}color_temperature'],
+      )!,
       fontSize: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}font_size'],
       )!,
+      lineHeight: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}line_height'],
+      )!,
       paperFilterEnabled: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}paper_filter_enabled'],
+      )!,
+      blueLightFilterEnabled: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}blue_light_filter_enabled'],
+      )!,
+      useDyslexiaFont: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}use_dyslexia_font'],
       )!,
       isDefault: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
@@ -1138,8 +1268,13 @@ class FilterProfileRow extends DataClass
   final int overlayColor;
   final double overlayOpacity;
   final double brightness;
+  final double contrast;
+  final double colorTemperature;
   final double fontSize;
+  final double lineHeight;
   final bool paperFilterEnabled;
+  final bool blueLightFilterEnabled;
+  final bool useDyslexiaFont;
   final bool isDefault;
   const FilterProfileRow({
     required this.id,
@@ -1148,8 +1283,13 @@ class FilterProfileRow extends DataClass
     required this.overlayColor,
     required this.overlayOpacity,
     required this.brightness,
+    required this.contrast,
+    required this.colorTemperature,
     required this.fontSize,
+    required this.lineHeight,
     required this.paperFilterEnabled,
+    required this.blueLightFilterEnabled,
+    required this.useDyslexiaFont,
     required this.isDefault,
   });
   @override
@@ -1161,8 +1301,13 @@ class FilterProfileRow extends DataClass
     map['overlay_color'] = Variable<int>(overlayColor);
     map['overlay_opacity'] = Variable<double>(overlayOpacity);
     map['brightness'] = Variable<double>(brightness);
+    map['contrast'] = Variable<double>(contrast);
+    map['color_temperature'] = Variable<double>(colorTemperature);
     map['font_size'] = Variable<double>(fontSize);
+    map['line_height'] = Variable<double>(lineHeight);
     map['paper_filter_enabled'] = Variable<bool>(paperFilterEnabled);
+    map['blue_light_filter_enabled'] = Variable<bool>(blueLightFilterEnabled);
+    map['use_dyslexia_font'] = Variable<bool>(useDyslexiaFont);
     map['is_default'] = Variable<bool>(isDefault);
     return map;
   }
@@ -1175,8 +1320,13 @@ class FilterProfileRow extends DataClass
       overlayColor: Value(overlayColor),
       overlayOpacity: Value(overlayOpacity),
       brightness: Value(brightness),
+      contrast: Value(contrast),
+      colorTemperature: Value(colorTemperature),
       fontSize: Value(fontSize),
+      lineHeight: Value(lineHeight),
       paperFilterEnabled: Value(paperFilterEnabled),
+      blueLightFilterEnabled: Value(blueLightFilterEnabled),
+      useDyslexiaFont: Value(useDyslexiaFont),
       isDefault: Value(isDefault),
     );
   }
@@ -1193,8 +1343,15 @@ class FilterProfileRow extends DataClass
       overlayColor: serializer.fromJson<int>(json['overlayColor']),
       overlayOpacity: serializer.fromJson<double>(json['overlayOpacity']),
       brightness: serializer.fromJson<double>(json['brightness']),
+      contrast: serializer.fromJson<double>(json['contrast']),
+      colorTemperature: serializer.fromJson<double>(json['colorTemperature']),
       fontSize: serializer.fromJson<double>(json['fontSize']),
+      lineHeight: serializer.fromJson<double>(json['lineHeight']),
       paperFilterEnabled: serializer.fromJson<bool>(json['paperFilterEnabled']),
+      blueLightFilterEnabled: serializer.fromJson<bool>(
+        json['blueLightFilterEnabled'],
+      ),
+      useDyslexiaFont: serializer.fromJson<bool>(json['useDyslexiaFont']),
       isDefault: serializer.fromJson<bool>(json['isDefault']),
     );
   }
@@ -1208,8 +1365,13 @@ class FilterProfileRow extends DataClass
       'overlayColor': serializer.toJson<int>(overlayColor),
       'overlayOpacity': serializer.toJson<double>(overlayOpacity),
       'brightness': serializer.toJson<double>(brightness),
+      'contrast': serializer.toJson<double>(contrast),
+      'colorTemperature': serializer.toJson<double>(colorTemperature),
       'fontSize': serializer.toJson<double>(fontSize),
+      'lineHeight': serializer.toJson<double>(lineHeight),
       'paperFilterEnabled': serializer.toJson<bool>(paperFilterEnabled),
+      'blueLightFilterEnabled': serializer.toJson<bool>(blueLightFilterEnabled),
+      'useDyslexiaFont': serializer.toJson<bool>(useDyslexiaFont),
       'isDefault': serializer.toJson<bool>(isDefault),
     };
   }
@@ -1221,8 +1383,13 @@ class FilterProfileRow extends DataClass
     int? overlayColor,
     double? overlayOpacity,
     double? brightness,
+    double? contrast,
+    double? colorTemperature,
     double? fontSize,
+    double? lineHeight,
     bool? paperFilterEnabled,
+    bool? blueLightFilterEnabled,
+    bool? useDyslexiaFont,
     bool? isDefault,
   }) => FilterProfileRow(
     id: id ?? this.id,
@@ -1231,8 +1398,14 @@ class FilterProfileRow extends DataClass
     overlayColor: overlayColor ?? this.overlayColor,
     overlayOpacity: overlayOpacity ?? this.overlayOpacity,
     brightness: brightness ?? this.brightness,
+    contrast: contrast ?? this.contrast,
+    colorTemperature: colorTemperature ?? this.colorTemperature,
     fontSize: fontSize ?? this.fontSize,
+    lineHeight: lineHeight ?? this.lineHeight,
     paperFilterEnabled: paperFilterEnabled ?? this.paperFilterEnabled,
+    blueLightFilterEnabled:
+        blueLightFilterEnabled ?? this.blueLightFilterEnabled,
+    useDyslexiaFont: useDyslexiaFont ?? this.useDyslexiaFont,
     isDefault: isDefault ?? this.isDefault,
   );
   FilterProfileRow copyWithCompanion(FilterProfilesCompanion data) {
@@ -1251,10 +1424,23 @@ class FilterProfileRow extends DataClass
       brightness: data.brightness.present
           ? data.brightness.value
           : this.brightness,
+      contrast: data.contrast.present ? data.contrast.value : this.contrast,
+      colorTemperature: data.colorTemperature.present
+          ? data.colorTemperature.value
+          : this.colorTemperature,
       fontSize: data.fontSize.present ? data.fontSize.value : this.fontSize,
+      lineHeight: data.lineHeight.present
+          ? data.lineHeight.value
+          : this.lineHeight,
       paperFilterEnabled: data.paperFilterEnabled.present
           ? data.paperFilterEnabled.value
           : this.paperFilterEnabled,
+      blueLightFilterEnabled: data.blueLightFilterEnabled.present
+          ? data.blueLightFilterEnabled.value
+          : this.blueLightFilterEnabled,
+      useDyslexiaFont: data.useDyslexiaFont.present
+          ? data.useDyslexiaFont.value
+          : this.useDyslexiaFont,
       isDefault: data.isDefault.present ? data.isDefault.value : this.isDefault,
     );
   }
@@ -1268,8 +1454,13 @@ class FilterProfileRow extends DataClass
           ..write('overlayColor: $overlayColor, ')
           ..write('overlayOpacity: $overlayOpacity, ')
           ..write('brightness: $brightness, ')
+          ..write('contrast: $contrast, ')
+          ..write('colorTemperature: $colorTemperature, ')
           ..write('fontSize: $fontSize, ')
+          ..write('lineHeight: $lineHeight, ')
           ..write('paperFilterEnabled: $paperFilterEnabled, ')
+          ..write('blueLightFilterEnabled: $blueLightFilterEnabled, ')
+          ..write('useDyslexiaFont: $useDyslexiaFont, ')
           ..write('isDefault: $isDefault')
           ..write(')'))
         .toString();
@@ -1283,8 +1474,13 @@ class FilterProfileRow extends DataClass
     overlayColor,
     overlayOpacity,
     brightness,
+    contrast,
+    colorTemperature,
     fontSize,
+    lineHeight,
     paperFilterEnabled,
+    blueLightFilterEnabled,
+    useDyslexiaFont,
     isDefault,
   );
   @override
@@ -1297,8 +1493,13 @@ class FilterProfileRow extends DataClass
           other.overlayColor == this.overlayColor &&
           other.overlayOpacity == this.overlayOpacity &&
           other.brightness == this.brightness &&
+          other.contrast == this.contrast &&
+          other.colorTemperature == this.colorTemperature &&
           other.fontSize == this.fontSize &&
+          other.lineHeight == this.lineHeight &&
           other.paperFilterEnabled == this.paperFilterEnabled &&
+          other.blueLightFilterEnabled == this.blueLightFilterEnabled &&
+          other.useDyslexiaFont == this.useDyslexiaFont &&
           other.isDefault == this.isDefault);
 }
 
@@ -1309,8 +1510,13 @@ class FilterProfilesCompanion extends UpdateCompanion<FilterProfileRow> {
   final Value<int> overlayColor;
   final Value<double> overlayOpacity;
   final Value<double> brightness;
+  final Value<double> contrast;
+  final Value<double> colorTemperature;
   final Value<double> fontSize;
+  final Value<double> lineHeight;
   final Value<bool> paperFilterEnabled;
+  final Value<bool> blueLightFilterEnabled;
+  final Value<bool> useDyslexiaFont;
   final Value<bool> isDefault;
   final Value<int> rowid;
   const FilterProfilesCompanion({
@@ -1320,8 +1526,13 @@ class FilterProfilesCompanion extends UpdateCompanion<FilterProfileRow> {
     this.overlayColor = const Value.absent(),
     this.overlayOpacity = const Value.absent(),
     this.brightness = const Value.absent(),
+    this.contrast = const Value.absent(),
+    this.colorTemperature = const Value.absent(),
     this.fontSize = const Value.absent(),
+    this.lineHeight = const Value.absent(),
     this.paperFilterEnabled = const Value.absent(),
+    this.blueLightFilterEnabled = const Value.absent(),
+    this.useDyslexiaFont = const Value.absent(),
     this.isDefault = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -1332,8 +1543,13 @@ class FilterProfilesCompanion extends UpdateCompanion<FilterProfileRow> {
     required int overlayColor,
     this.overlayOpacity = const Value.absent(),
     this.brightness = const Value.absent(),
+    this.contrast = const Value.absent(),
+    this.colorTemperature = const Value.absent(),
     this.fontSize = const Value.absent(),
+    this.lineHeight = const Value.absent(),
     this.paperFilterEnabled = const Value.absent(),
+    this.blueLightFilterEnabled = const Value.absent(),
+    this.useDyslexiaFont = const Value.absent(),
     this.isDefault = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -1347,8 +1563,13 @@ class FilterProfilesCompanion extends UpdateCompanion<FilterProfileRow> {
     Expression<int>? overlayColor,
     Expression<double>? overlayOpacity,
     Expression<double>? brightness,
+    Expression<double>? contrast,
+    Expression<double>? colorTemperature,
     Expression<double>? fontSize,
+    Expression<double>? lineHeight,
     Expression<bool>? paperFilterEnabled,
+    Expression<bool>? blueLightFilterEnabled,
+    Expression<bool>? useDyslexiaFont,
     Expression<bool>? isDefault,
     Expression<int>? rowid,
   }) {
@@ -1359,9 +1580,15 @@ class FilterProfilesCompanion extends UpdateCompanion<FilterProfileRow> {
       if (overlayColor != null) 'overlay_color': overlayColor,
       if (overlayOpacity != null) 'overlay_opacity': overlayOpacity,
       if (brightness != null) 'brightness': brightness,
+      if (contrast != null) 'contrast': contrast,
+      if (colorTemperature != null) 'color_temperature': colorTemperature,
       if (fontSize != null) 'font_size': fontSize,
+      if (lineHeight != null) 'line_height': lineHeight,
       if (paperFilterEnabled != null)
         'paper_filter_enabled': paperFilterEnabled,
+      if (blueLightFilterEnabled != null)
+        'blue_light_filter_enabled': blueLightFilterEnabled,
+      if (useDyslexiaFont != null) 'use_dyslexia_font': useDyslexiaFont,
       if (isDefault != null) 'is_default': isDefault,
       if (rowid != null) 'rowid': rowid,
     });
@@ -1374,8 +1601,13 @@ class FilterProfilesCompanion extends UpdateCompanion<FilterProfileRow> {
     Value<int>? overlayColor,
     Value<double>? overlayOpacity,
     Value<double>? brightness,
+    Value<double>? contrast,
+    Value<double>? colorTemperature,
     Value<double>? fontSize,
+    Value<double>? lineHeight,
     Value<bool>? paperFilterEnabled,
+    Value<bool>? blueLightFilterEnabled,
+    Value<bool>? useDyslexiaFont,
     Value<bool>? isDefault,
     Value<int>? rowid,
   }) {
@@ -1386,8 +1618,14 @@ class FilterProfilesCompanion extends UpdateCompanion<FilterProfileRow> {
       overlayColor: overlayColor ?? this.overlayColor,
       overlayOpacity: overlayOpacity ?? this.overlayOpacity,
       brightness: brightness ?? this.brightness,
+      contrast: contrast ?? this.contrast,
+      colorTemperature: colorTemperature ?? this.colorTemperature,
       fontSize: fontSize ?? this.fontSize,
+      lineHeight: lineHeight ?? this.lineHeight,
       paperFilterEnabled: paperFilterEnabled ?? this.paperFilterEnabled,
+      blueLightFilterEnabled:
+          blueLightFilterEnabled ?? this.blueLightFilterEnabled,
+      useDyslexiaFont: useDyslexiaFont ?? this.useDyslexiaFont,
       isDefault: isDefault ?? this.isDefault,
       rowid: rowid ?? this.rowid,
     );
@@ -1414,11 +1652,28 @@ class FilterProfilesCompanion extends UpdateCompanion<FilterProfileRow> {
     if (brightness.present) {
       map['brightness'] = Variable<double>(brightness.value);
     }
+    if (contrast.present) {
+      map['contrast'] = Variable<double>(contrast.value);
+    }
+    if (colorTemperature.present) {
+      map['color_temperature'] = Variable<double>(colorTemperature.value);
+    }
     if (fontSize.present) {
       map['font_size'] = Variable<double>(fontSize.value);
     }
+    if (lineHeight.present) {
+      map['line_height'] = Variable<double>(lineHeight.value);
+    }
     if (paperFilterEnabled.present) {
       map['paper_filter_enabled'] = Variable<bool>(paperFilterEnabled.value);
+    }
+    if (blueLightFilterEnabled.present) {
+      map['blue_light_filter_enabled'] = Variable<bool>(
+        blueLightFilterEnabled.value,
+      );
+    }
+    if (useDyslexiaFont.present) {
+      map['use_dyslexia_font'] = Variable<bool>(useDyslexiaFont.value);
     }
     if (isDefault.present) {
       map['is_default'] = Variable<bool>(isDefault.value);
@@ -1438,8 +1693,13 @@ class FilterProfilesCompanion extends UpdateCompanion<FilterProfileRow> {
           ..write('overlayColor: $overlayColor, ')
           ..write('overlayOpacity: $overlayOpacity, ')
           ..write('brightness: $brightness, ')
+          ..write('contrast: $contrast, ')
+          ..write('colorTemperature: $colorTemperature, ')
           ..write('fontSize: $fontSize, ')
+          ..write('lineHeight: $lineHeight, ')
           ..write('paperFilterEnabled: $paperFilterEnabled, ')
+          ..write('blueLightFilterEnabled: $blueLightFilterEnabled, ')
+          ..write('useDyslexiaFont: $useDyslexiaFont, ')
           ..write('isDefault: $isDefault, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -1821,318 +2081,6 @@ class ReadingProgressEntriesCompanion
   }
 }
 
-class $ReadingSessionsTable extends ReadingSessions
-    with TableInfo<$ReadingSessionsTable, ReadingSessionRow> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $ReadingSessionsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-    'id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _bookIdMeta = const VerificationMeta('bookId');
-  @override
-  late final GeneratedColumn<String> bookId = GeneratedColumn<String>(
-    'book_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES books (id)',
-    ),
-  );
-  static const VerificationMeta _startedAtMeta = const VerificationMeta(
-    'startedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> startedAt = GeneratedColumn<DateTime>(
-    'started_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
-  );
-  static const VerificationMeta _endedAtMeta = const VerificationMeta(
-    'endedAt',
-  );
-  @override
-  late final GeneratedColumn<DateTime> endedAt = GeneratedColumn<DateTime>(
-    'ended_at',
-    aliasedName,
-    false,
-    type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [id, bookId, startedAt, endedAt];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'reading_sessions';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<ReadingSessionRow> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('book_id')) {
-      context.handle(
-        _bookIdMeta,
-        bookId.isAcceptableOrUnknown(data['book_id']!, _bookIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_bookIdMeta);
-    }
-    if (data.containsKey('started_at')) {
-      context.handle(
-        _startedAtMeta,
-        startedAt.isAcceptableOrUnknown(data['started_at']!, _startedAtMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_startedAtMeta);
-    }
-    if (data.containsKey('ended_at')) {
-      context.handle(
-        _endedAtMeta,
-        endedAt.isAcceptableOrUnknown(data['ended_at']!, _endedAtMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_endedAtMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  ReadingSessionRow map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ReadingSessionRow(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}id'],
-      )!,
-      bookId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}book_id'],
-      )!,
-      startedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}started_at'],
-      )!,
-      endedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
-        data['${effectivePrefix}ended_at'],
-      )!,
-    );
-  }
-
-  @override
-  $ReadingSessionsTable createAlias(String alias) {
-    return $ReadingSessionsTable(attachedDatabase, alias);
-  }
-}
-
-class ReadingSessionRow extends DataClass
-    implements Insertable<ReadingSessionRow> {
-  final String id;
-  final String bookId;
-  final DateTime startedAt;
-  final DateTime endedAt;
-  const ReadingSessionRow({
-    required this.id,
-    required this.bookId,
-    required this.startedAt,
-    required this.endedAt,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    map['book_id'] = Variable<String>(bookId);
-    map['started_at'] = Variable<DateTime>(startedAt);
-    map['ended_at'] = Variable<DateTime>(endedAt);
-    return map;
-  }
-
-  ReadingSessionsCompanion toCompanion(bool nullToAbsent) {
-    return ReadingSessionsCompanion(
-      id: Value(id),
-      bookId: Value(bookId),
-      startedAt: Value(startedAt),
-      endedAt: Value(endedAt),
-    );
-  }
-
-  factory ReadingSessionRow.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ReadingSessionRow(
-      id: serializer.fromJson<String>(json['id']),
-      bookId: serializer.fromJson<String>(json['bookId']),
-      startedAt: serializer.fromJson<DateTime>(json['startedAt']),
-      endedAt: serializer.fromJson<DateTime>(json['endedAt']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'bookId': serializer.toJson<String>(bookId),
-      'startedAt': serializer.toJson<DateTime>(startedAt),
-      'endedAt': serializer.toJson<DateTime>(endedAt),
-    };
-  }
-
-  ReadingSessionRow copyWith({
-    String? id,
-    String? bookId,
-    DateTime? startedAt,
-    DateTime? endedAt,
-  }) => ReadingSessionRow(
-    id: id ?? this.id,
-    bookId: bookId ?? this.bookId,
-    startedAt: startedAt ?? this.startedAt,
-    endedAt: endedAt ?? this.endedAt,
-  );
-  ReadingSessionRow copyWithCompanion(ReadingSessionsCompanion data) {
-    return ReadingSessionRow(
-      id: data.id.present ? data.id.value : this.id,
-      bookId: data.bookId.present ? data.bookId.value : this.bookId,
-      startedAt: data.startedAt.present ? data.startedAt.value : this.startedAt,
-      endedAt: data.endedAt.present ? data.endedAt.value : this.endedAt,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('ReadingSessionRow(')
-          ..write('id: $id, ')
-          ..write('bookId: $bookId, ')
-          ..write('startedAt: $startedAt, ')
-          ..write('endedAt: $endedAt')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, bookId, startedAt, endedAt);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is ReadingSessionRow &&
-          other.id == this.id &&
-          other.bookId == this.bookId &&
-          other.startedAt == this.startedAt &&
-          other.endedAt == this.endedAt);
-}
-
-class ReadingSessionsCompanion extends UpdateCompanion<ReadingSessionRow> {
-  final Value<String> id;
-  final Value<String> bookId;
-  final Value<DateTime> startedAt;
-  final Value<DateTime> endedAt;
-  final Value<int> rowid;
-  const ReadingSessionsCompanion({
-    this.id = const Value.absent(),
-    this.bookId = const Value.absent(),
-    this.startedAt = const Value.absent(),
-    this.endedAt = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  ReadingSessionsCompanion.insert({
-    required String id,
-    required String bookId,
-    required DateTime startedAt,
-    required DateTime endedAt,
-    this.rowid = const Value.absent(),
-  }) : id = Value(id),
-       bookId = Value(bookId),
-       startedAt = Value(startedAt),
-       endedAt = Value(endedAt);
-  static Insertable<ReadingSessionRow> custom({
-    Expression<String>? id,
-    Expression<String>? bookId,
-    Expression<DateTime>? startedAt,
-    Expression<DateTime>? endedAt,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (bookId != null) 'book_id': bookId,
-      if (startedAt != null) 'started_at': startedAt,
-      if (endedAt != null) 'ended_at': endedAt,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  ReadingSessionsCompanion copyWith({
-    Value<String>? id,
-    Value<String>? bookId,
-    Value<DateTime>? startedAt,
-    Value<DateTime>? endedAt,
-    Value<int>? rowid,
-  }) {
-    return ReadingSessionsCompanion(
-      id: id ?? this.id,
-      bookId: bookId ?? this.bookId,
-      startedAt: startedAt ?? this.startedAt,
-      endedAt: endedAt ?? this.endedAt,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (bookId.present) {
-      map['book_id'] = Variable<String>(bookId.value);
-    }
-    if (startedAt.present) {
-      map['started_at'] = Variable<DateTime>(startedAt.value);
-    }
-    if (endedAt.present) {
-      map['ended_at'] = Variable<DateTime>(endedAt.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('ReadingSessionsCompanion(')
-          ..write('id: $id, ')
-          ..write('bookId: $bookId, ')
-          ..write('startedAt: $startedAt, ')
-          ..write('endedAt: $endedAt, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -2141,9 +2089,6 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $FilterProfilesTable filterProfiles = $FilterProfilesTable(this);
   late final $ReadingProgressEntriesTable readingProgressEntries =
       $ReadingProgressEntriesTable(this);
-  late final $ReadingSessionsTable readingSessions = $ReadingSessionsTable(
-    this,
-  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2153,7 +2098,6 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     books,
     filterProfiles,
     readingProgressEntries,
-    readingSessions,
   ];
 }
 
@@ -2522,26 +2466,6 @@ final class $$BooksTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
-
-  static MultiTypedResultKey<$ReadingSessionsTable, List<ReadingSessionRow>>
-  _readingSessionsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.readingSessions,
-    aliasName: 'books__id__reading_sessions__book_id',
-  );
-
-  $$ReadingSessionsTableProcessedTableManager get readingSessionsRefs {
-    final manager = $$ReadingSessionsTableTableManager(
-      $_db,
-      $_db.readingSessions,
-    ).filter((f) => f.bookId.id.sqlEquals($_itemColumn<String>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _readingSessionsRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
 }
 
 class $$BooksTableFilterComposer extends Composer<_$AppDatabase, $BooksTable> {
@@ -2633,31 +2557,6 @@ class $$BooksTableFilterComposer extends Composer<_$AppDatabase, $BooksTable> {
                     $removeJoinBuilderFromRootComposer,
               ),
         );
-    return f(composer);
-  }
-
-  Expression<bool> readingSessionsRefs(
-    Expression<bool> Function($$ReadingSessionsTableFilterComposer f) f,
-  ) {
-    final $$ReadingSessionsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.readingSessions,
-      getReferencedColumn: (t) => t.bookId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ReadingSessionsTableFilterComposer(
-            $db: $db,
-            $table: $db.readingSessions,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
     return f(composer);
   }
 }
@@ -2810,31 +2709,6 @@ class $$BooksTableAnnotationComposer
         );
     return f(composer);
   }
-
-  Expression<T> readingSessionsRefs<T extends Object>(
-    Expression<T> Function($$ReadingSessionsTableAnnotationComposer a) f,
-  ) {
-    final $$ReadingSessionsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.id,
-      referencedTable: $db.readingSessions,
-      getReferencedColumn: (t) => t.bookId,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$ReadingSessionsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.readingSessions,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return f(composer);
-  }
 }
 
 class $$BooksTableTableManager
@@ -2853,7 +2727,6 @@ class $$BooksTableTableManager
           PrefetchHooks Function({
             bool shelfId,
             bool readingProgressEntriesRefs,
-            bool readingSessionsRefs,
           })
         > {
   $$BooksTableTableManager(_$AppDatabase db, $BooksTable table)
@@ -2918,16 +2791,11 @@ class $$BooksTableTableManager
               )
               .toList(),
           prefetchHooksCallback:
-              ({
-                shelfId = false,
-                readingProgressEntriesRefs = false,
-                readingSessionsRefs = false,
-              }) {
+              ({shelfId = false, readingProgressEntriesRefs = false}) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (readingProgressEntriesRefs) db.readingProgressEntries,
-                    if (readingSessionsRefs) db.readingSessions,
                   ],
                   addJoins:
                       <
@@ -2984,27 +2852,6 @@ class $$BooksTableTableManager
                               ),
                           typedResults: items,
                         ),
-                      if (readingSessionsRefs)
-                        await $_getPrefetchedData<
-                          BookRow,
-                          $BooksTable,
-                          ReadingSessionRow
-                        >(
-                          currentTable: table,
-                          referencedTable: $$BooksTableReferences
-                              ._readingSessionsRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$BooksTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).readingSessionsRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.bookId == item.id,
-                              ),
-                          typedResults: items,
-                        ),
                     ];
                   },
                 );
@@ -3025,11 +2872,7 @@ typedef $$BooksTableProcessedTableManager =
       $$BooksTableUpdateCompanionBuilder,
       (BookRow, $$BooksTableReferences),
       BookRow,
-      PrefetchHooks Function({
-        bool shelfId,
-        bool readingProgressEntriesRefs,
-        bool readingSessionsRefs,
-      })
+      PrefetchHooks Function({bool shelfId, bool readingProgressEntriesRefs})
     >;
 typedef $$FilterProfilesTableCreateCompanionBuilder =
     FilterProfilesCompanion Function({
@@ -3039,8 +2882,13 @@ typedef $$FilterProfilesTableCreateCompanionBuilder =
       required int overlayColor,
       Value<double> overlayOpacity,
       Value<double> brightness,
+      Value<double> contrast,
+      Value<double> colorTemperature,
       Value<double> fontSize,
+      Value<double> lineHeight,
       Value<bool> paperFilterEnabled,
+      Value<bool> blueLightFilterEnabled,
+      Value<bool> useDyslexiaFont,
       Value<bool> isDefault,
       Value<int> rowid,
     });
@@ -3052,8 +2900,13 @@ typedef $$FilterProfilesTableUpdateCompanionBuilder =
       Value<int> overlayColor,
       Value<double> overlayOpacity,
       Value<double> brightness,
+      Value<double> contrast,
+      Value<double> colorTemperature,
       Value<double> fontSize,
+      Value<double> lineHeight,
       Value<bool> paperFilterEnabled,
+      Value<bool> blueLightFilterEnabled,
+      Value<bool> useDyslexiaFont,
       Value<bool> isDefault,
       Value<int> rowid,
     });
@@ -3097,13 +2950,38 @@ class $$FilterProfilesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<double> get contrast => $composableBuilder(
+    column: $table.contrast,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get colorTemperature => $composableBuilder(
+    column: $table.colorTemperature,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<double> get fontSize => $composableBuilder(
     column: $table.fontSize,
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<double> get lineHeight => $composableBuilder(
+    column: $table.lineHeight,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<bool> get paperFilterEnabled => $composableBuilder(
     column: $table.paperFilterEnabled,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get blueLightFilterEnabled => $composableBuilder(
+    column: $table.blueLightFilterEnabled,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get useDyslexiaFont => $composableBuilder(
+    column: $table.useDyslexiaFont,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3152,13 +3030,38 @@ class $$FilterProfilesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get contrast => $composableBuilder(
+    column: $table.contrast,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get colorTemperature => $composableBuilder(
+    column: $table.colorTemperature,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<double> get fontSize => $composableBuilder(
     column: $table.fontSize,
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get lineHeight => $composableBuilder(
+    column: $table.lineHeight,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get paperFilterEnabled => $composableBuilder(
     column: $table.paperFilterEnabled,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get blueLightFilterEnabled => $composableBuilder(
+    column: $table.blueLightFilterEnabled,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get useDyslexiaFont => $composableBuilder(
+    column: $table.useDyslexiaFont,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -3203,11 +3106,34 @@ class $$FilterProfilesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<double> get contrast =>
+      $composableBuilder(column: $table.contrast, builder: (column) => column);
+
+  GeneratedColumn<double> get colorTemperature => $composableBuilder(
+    column: $table.colorTemperature,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<double> get fontSize =>
       $composableBuilder(column: $table.fontSize, builder: (column) => column);
 
+  GeneratedColumn<double> get lineHeight => $composableBuilder(
+    column: $table.lineHeight,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<bool> get paperFilterEnabled => $composableBuilder(
     column: $table.paperFilterEnabled,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get blueLightFilterEnabled => $composableBuilder(
+    column: $table.blueLightFilterEnabled,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get useDyslexiaFont => $composableBuilder(
+    column: $table.useDyslexiaFont,
     builder: (column) => column,
   );
 
@@ -3258,8 +3184,13 @@ class $$FilterProfilesTableTableManager
                 Value<int> overlayColor = const Value.absent(),
                 Value<double> overlayOpacity = const Value.absent(),
                 Value<double> brightness = const Value.absent(),
+                Value<double> contrast = const Value.absent(),
+                Value<double> colorTemperature = const Value.absent(),
                 Value<double> fontSize = const Value.absent(),
+                Value<double> lineHeight = const Value.absent(),
                 Value<bool> paperFilterEnabled = const Value.absent(),
+                Value<bool> blueLightFilterEnabled = const Value.absent(),
+                Value<bool> useDyslexiaFont = const Value.absent(),
                 Value<bool> isDefault = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => FilterProfilesCompanion(
@@ -3269,8 +3200,13 @@ class $$FilterProfilesTableTableManager
                 overlayColor: overlayColor,
                 overlayOpacity: overlayOpacity,
                 brightness: brightness,
+                contrast: contrast,
+                colorTemperature: colorTemperature,
                 fontSize: fontSize,
+                lineHeight: lineHeight,
                 paperFilterEnabled: paperFilterEnabled,
+                blueLightFilterEnabled: blueLightFilterEnabled,
+                useDyslexiaFont: useDyslexiaFont,
                 isDefault: isDefault,
                 rowid: rowid,
               ),
@@ -3282,8 +3218,13 @@ class $$FilterProfilesTableTableManager
                 required int overlayColor,
                 Value<double> overlayOpacity = const Value.absent(),
                 Value<double> brightness = const Value.absent(),
+                Value<double> contrast = const Value.absent(),
+                Value<double> colorTemperature = const Value.absent(),
                 Value<double> fontSize = const Value.absent(),
+                Value<double> lineHeight = const Value.absent(),
                 Value<bool> paperFilterEnabled = const Value.absent(),
+                Value<bool> blueLightFilterEnabled = const Value.absent(),
+                Value<bool> useDyslexiaFont = const Value.absent(),
                 Value<bool> isDefault = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => FilterProfilesCompanion.insert(
@@ -3293,8 +3234,13 @@ class $$FilterProfilesTableTableManager
                 overlayColor: overlayColor,
                 overlayOpacity: overlayOpacity,
                 brightness: brightness,
+                contrast: contrast,
+                colorTemperature: colorTemperature,
                 fontSize: fontSize,
+                lineHeight: lineHeight,
                 paperFilterEnabled: paperFilterEnabled,
+                blueLightFilterEnabled: blueLightFilterEnabled,
+                useDyslexiaFont: useDyslexiaFont,
                 isDefault: isDefault,
                 rowid: rowid,
               ),
@@ -3666,317 +3612,6 @@ typedef $$ReadingProgressEntriesTableProcessedTableManager =
       ReadingProgressRow,
       PrefetchHooks Function({bool bookId})
     >;
-typedef $$ReadingSessionsTableCreateCompanionBuilder =
-    ReadingSessionsCompanion Function({
-      required String id,
-      required String bookId,
-      required DateTime startedAt,
-      required DateTime endedAt,
-      Value<int> rowid,
-    });
-typedef $$ReadingSessionsTableUpdateCompanionBuilder =
-    ReadingSessionsCompanion Function({
-      Value<String> id,
-      Value<String> bookId,
-      Value<DateTime> startedAt,
-      Value<DateTime> endedAt,
-      Value<int> rowid,
-    });
-
-final class $$ReadingSessionsTableReferences
-    extends
-        BaseReferences<
-          _$AppDatabase,
-          $ReadingSessionsTable,
-          ReadingSessionRow
-        > {
-  $$ReadingSessionsTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static $BooksTable _bookIdTable(_$AppDatabase db) =>
-      db.books.createAlias('reading_sessions__book_id__books__id');
-
-  $$BooksTableProcessedTableManager get bookId {
-    final $_column = $_itemColumn<String>('book_id')!;
-
-    final manager = $$BooksTableTableManager(
-      $_db,
-      $_db.books,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_bookIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
-class $$ReadingSessionsTableFilterComposer
-    extends Composer<_$AppDatabase, $ReadingSessionsTable> {
-  $$ReadingSessionsTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get startedAt => $composableBuilder(
-    column: $table.startedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<DateTime> get endedAt => $composableBuilder(
-    column: $table.endedAt,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  $$BooksTableFilterComposer get bookId {
-    final $$BooksTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.bookId,
-      referencedTable: $db.books,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$BooksTableFilterComposer(
-            $db: $db,
-            $table: $db.books,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$ReadingSessionsTableOrderingComposer
-    extends Composer<_$AppDatabase, $ReadingSessionsTable> {
-  $$ReadingSessionsTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get startedAt => $composableBuilder(
-    column: $table.startedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<DateTime> get endedAt => $composableBuilder(
-    column: $table.endedAt,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  $$BooksTableOrderingComposer get bookId {
-    final $$BooksTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.bookId,
-      referencedTable: $db.books,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$BooksTableOrderingComposer(
-            $db: $db,
-            $table: $db.books,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$ReadingSessionsTableAnnotationComposer
-    extends Composer<_$AppDatabase, $ReadingSessionsTable> {
-  $$ReadingSessionsTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get startedAt =>
-      $composableBuilder(column: $table.startedAt, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get endedAt =>
-      $composableBuilder(column: $table.endedAt, builder: (column) => column);
-
-  $$BooksTableAnnotationComposer get bookId {
-    final $$BooksTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.bookId,
-      referencedTable: $db.books,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$BooksTableAnnotationComposer(
-            $db: $db,
-            $table: $db.books,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$ReadingSessionsTableTableManager
-    extends
-        RootTableManager<
-          _$AppDatabase,
-          $ReadingSessionsTable,
-          ReadingSessionRow,
-          $$ReadingSessionsTableFilterComposer,
-          $$ReadingSessionsTableOrderingComposer,
-          $$ReadingSessionsTableAnnotationComposer,
-          $$ReadingSessionsTableCreateCompanionBuilder,
-          $$ReadingSessionsTableUpdateCompanionBuilder,
-          (ReadingSessionRow, $$ReadingSessionsTableReferences),
-          ReadingSessionRow,
-          PrefetchHooks Function({bool bookId})
-        > {
-  $$ReadingSessionsTableTableManager(
-    _$AppDatabase db,
-    $ReadingSessionsTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$ReadingSessionsTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$ReadingSessionsTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$ReadingSessionsTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<String> id = const Value.absent(),
-                Value<String> bookId = const Value.absent(),
-                Value<DateTime> startedAt = const Value.absent(),
-                Value<DateTime> endedAt = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
-              }) => ReadingSessionsCompanion(
-                id: id,
-                bookId: bookId,
-                startedAt: startedAt,
-                endedAt: endedAt,
-                rowid: rowid,
-              ),
-          createCompanionCallback:
-              ({
-                required String id,
-                required String bookId,
-                required DateTime startedAt,
-                required DateTime endedAt,
-                Value<int> rowid = const Value.absent(),
-              }) => ReadingSessionsCompanion.insert(
-                id: id,
-                bookId: bookId,
-                startedAt: startedAt,
-                endedAt: endedAt,
-                rowid: rowid,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable(table),
-                  $$ReadingSessionsTableReferences(db, table, e),
-                ),
-              )
-              .toList(),
-          prefetchHooksCallback: ({bookId = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [],
-              addJoins:
-                  <
-                    T extends TableManagerState<
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic,
-                      dynamic
-                    >
-                  >(state) {
-                    if (bookId) {
-                      state =
-                          state.withJoin(
-                                currentTable: table,
-                                currentColumn: table.bookId,
-                                referencedTable:
-                                    $$ReadingSessionsTableReferences
-                                        ._bookIdTable(db),
-                                referencedColumn:
-                                    $$ReadingSessionsTableReferences
-                                        ._bookIdTable(db)
-                                        .id,
-                              )
-                              as T;
-                    }
-
-                    return state;
-                  },
-              getPrefetchedDataCallback: (items) async {
-                return [];
-              },
-            );
-          },
-        ),
-      );
-}
-
-typedef $$ReadingSessionsTableProcessedTableManager =
-    ProcessedTableManager<
-      _$AppDatabase,
-      $ReadingSessionsTable,
-      ReadingSessionRow,
-      $$ReadingSessionsTableFilterComposer,
-      $$ReadingSessionsTableOrderingComposer,
-      $$ReadingSessionsTableAnnotationComposer,
-      $$ReadingSessionsTableCreateCompanionBuilder,
-      $$ReadingSessionsTableUpdateCompanionBuilder,
-      (ReadingSessionRow, $$ReadingSessionsTableReferences),
-      ReadingSessionRow,
-      PrefetchHooks Function({bool bookId})
-    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -3992,6 +3627,4 @@ class $AppDatabaseManager {
         _db,
         _db.readingProgressEntries,
       );
-  $$ReadingSessionsTableTableManager get readingSessions =>
-      $$ReadingSessionsTableTableManager(_db, _db.readingSessions);
 }

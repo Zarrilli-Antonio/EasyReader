@@ -26,8 +26,15 @@ class FilterProfiles extends Table {
   IntColumn get overlayColor => integer()();
   RealColumn get overlayOpacity => real().withDefault(const Constant(0))();
   RealColumn get brightness => real().withDefault(const Constant(0))();
+  RealColumn get contrast => real().withDefault(const Constant(1))();
+  RealColumn get colorTemperature => real().withDefault(const Constant(0))();
   RealColumn get fontSize => real().withDefault(const Constant(16))();
+  RealColumn get lineHeight => real().withDefault(const Constant(1.4))();
   BoolColumn get paperFilterEnabled =>
+      boolean().withDefault(const Constant(false))();
+  BoolColumn get blueLightFilterEnabled =>
+      boolean().withDefault(const Constant(false))();
+  BoolColumn get useDyslexiaFont =>
       boolean().withDefault(const Constant(false))();
   BoolColumn get isDefault => boolean().withDefault(const Constant(false))();
 
@@ -59,32 +66,13 @@ class Shelves extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-@DataClassName('ReadingSessionRow')
-class ReadingSessions extends Table {
-  TextColumn get id => text()();
-  TextColumn get bookId => text().references(Books, #id)();
-  DateTimeColumn get startedAt => dateTime()();
-  DateTimeColumn get endedAt => dateTime()();
-
-  @override
-  Set<Column> get primaryKey => {id};
-}
-
-@DriftDatabase(
-  tables: [
-    Books,
-    FilterProfiles,
-    ReadingProgressEntries,
-    Shelves,
-    ReadingSessions,
-  ],
-)
+@DriftDatabase(tables: [Books, FilterProfiles, ReadingProgressEntries, Shelves])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(driftDatabase(name: 'easy_reader_db'));
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -107,7 +95,24 @@ class AppDatabase extends _$AppDatabase {
         );
       }
       if (from < 6) {
-        await m.createTable(readingSessions);
+        // La tabella delle sessioni di lettura (v6) è stata rimossa in v7:
+        // il tracciamento non era attendibile (perso ogni volta che l'app
+        // andava in background invece di tornare indietro dentro l'app).
+      }
+      if (from < 7) {
+        // Elimina la tabella introdotta in v6, se presente (chi è passato
+        // direttamente da una versione precedente non l'avrà mai creata).
+        await m.deleteTable('reading_sessions');
+        await m.addColumn(filterProfiles, filterProfiles.contrast);
+        await m.addColumn(filterProfiles, filterProfiles.colorTemperature);
+        await m.addColumn(filterProfiles, filterProfiles.lineHeight);
+      }
+      if (from < 8) {
+        await m.addColumn(
+          filterProfiles,
+          filterProfiles.blueLightFilterEnabled,
+        );
+        await m.addColumn(filterProfiles, filterProfiles.useDyslexiaFont);
       }
     },
   );

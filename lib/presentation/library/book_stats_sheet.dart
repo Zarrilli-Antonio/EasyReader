@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/book.dart';
-import '../common/duration_format.dart';
 import '../common/providers.dart';
 
 Future<void> showBookStatsSheet(BuildContext context, Book book) {
@@ -19,7 +18,6 @@ class _BookStatsSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final stats = ref.watch(bookReadingStatsProvider(book.id));
     final progress = ref.watch(readingProgressProvider(book.id)).valueOrNull;
     final percentage = ((progress?.percentage ?? 0) * 100).round();
 
@@ -49,18 +47,6 @@ class _BookStatsSheet extends ConsumerWidget {
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 20),
-            _StatRow(
-              icon: Icons.timer_outlined,
-              label: 'Tempo di lettura',
-              value: stats.totalReadingTime == Duration.zero
-                  ? 'Non ancora iniziato'
-                  : formatReadingDuration(stats.totalReadingTime),
-            ),
-            _StatRow(
-              icon: Icons.menu_book_outlined,
-              label: 'Sessioni di lettura',
-              value: '${stats.sessionCount}',
-            ),
             _StatRow(
               icon: Icons.donut_large_outlined,
               label: 'Letto',

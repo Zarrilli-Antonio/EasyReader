@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'data/filters/dyslexia_font_asset.dart';
 import 'presentation/library/library_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DyslexiaFontAsset.preload();
   runApp(const ProviderScope(child: EasyReaderApp()));
 }
 

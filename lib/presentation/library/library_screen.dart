@@ -202,6 +202,8 @@ class _LibraryGridTile extends ConsumerWidget {
         context,
       ).push(MaterialPageRoute(builder: (_) => ReaderScreen(book: book))),
       onLongPress: () => _showBookActions(context, ref, book),
+      // Click destro del mouse su desktop = pressione prolungata su mobile.
+      onSecondaryTap: () => _showBookActions(context, ref, book),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

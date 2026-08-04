@@ -35,8 +35,13 @@ class DriftFilterProfileRepository implements FilterProfileRepository {
             overlayColor: profile.overlayColor.toARGB32(),
             overlayOpacity: Value(profile.overlayOpacity),
             brightness: Value(profile.brightness),
+            contrast: Value(profile.contrast),
+            colorTemperature: Value(profile.colorTemperature),
             fontSize: Value(profile.fontSize),
+            lineHeight: Value(profile.lineHeight),
             paperFilterEnabled: Value(profile.paperFilterEnabled),
+            blueLightFilterEnabled: Value(profile.blueLightFilterEnabled),
+            useDyslexiaFont: Value(profile.useDyslexiaFont),
             isDefault: const Value(true),
           ),
         );
@@ -49,8 +54,13 @@ class DriftFilterProfileRepository implements FilterProfileRepository {
     overlayColor: Color(row.overlayColor),
     overlayOpacity: row.overlayOpacity,
     brightness: row.brightness,
+    contrast: row.contrast,
+    colorTemperature: row.colorTemperature,
     fontSize: row.fontSize,
+    lineHeight: row.lineHeight,
     paperFilterEnabled: row.paperFilterEnabled,
+    blueLightFilterEnabled: row.blueLightFilterEnabled,
+    useDyslexiaFont: row.useDyslexiaFont,
     isDefault: row.isDefault,
   );
 }

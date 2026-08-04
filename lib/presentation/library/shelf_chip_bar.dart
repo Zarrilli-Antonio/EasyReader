@@ -39,6 +39,8 @@ class ShelfChipBar extends ConsumerWidget {
           for (final shelf in shelves) ...[
             GestureDetector(
               onLongPress: () => _showShelfActions(context, ref, shelf),
+              // Click destro del mouse su desktop = pressione prolungata su mobile.
+              onSecondaryTap: () => _showShelfActions(context, ref, shelf),
               child: ChoiceChip(
                 avatar: Icon(shelf.icon.data, size: 18, color: shelf.color),
                 label: Text(shelf.name),

@@ -20,7 +20,7 @@ class FilterOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ColorFiltered(
-      colorFilter: ColorFilter.matrix(_brightnessMatrix(profile.brightness)),
+      colorFilter: ColorFilter.matrix(_buildColorMatrix(profile)),
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -44,13 +44,32 @@ class FilterOverlay extends StatelessWidget {
     );
   }
 
-  /// [brightness] va da -1 (più scuro) a 1 (più chiaro); 0 = nessun effetto.
-  List<double> _brightnessMatrix(double brightness) {
-    final offset = brightness.clamp(-1.0, 1.0) * 255;
+  /// Combina luminosità, contrasto, temperatura colore e filtro luce blu in
+  /// un'unica matrice, così tutti gli effetti si applicano insieme in un
+  /// solo passaggio invece di annidare più `ColorFiltered` (più costoso e
+  /// con un ordine di composizione meno prevedibile).
+  ///
+  /// - luminosità: -1 (più scuro) .. 1 (più chiaro), 0 = nessun effetto
+  /// - contrasto: 0.5 (basso) .. 1.8 (alto), 1 = nessun effetto
+  /// - temperatura: -1 (freddo/blu) .. 1 (caldo/ambra), 0 = nessun effetto
+  /// - filtro luce blu: se attivo, riduce anche la trasmissione del canale
+  ///   blu (non solo un'aggiunta di ambra come la temperatura), lo stesso
+  ///   principio usato dai filtri per la luce blu serale
+  List<double> _buildColorMatrix(FilterProfile profile) {
+    final brightnessOffset = profile.brightness.clamp(-1.0, 1.0) * 255;
+    final contrastFactor = profile.contrast.clamp(0.5, 1.8);
+    final contrastOffset = (1 - contrastFactor) * 127.5;
+    final warmOffset = profile.colorTemperature.clamp(-1.0, 1.0) * 40;
+    final blueLightFactor = profile.blueLightFilterEnabled ? 0.7 : 1.0;
+
+    final redOffset = contrastOffset + brightnessOffset + warmOffset;
+    final greenOffset = contrastOffset + brightnessOffset;
+    final blueOffset = contrastOffset + brightnessOffset - warmOffset;
+
     return <double>[
-      1, 0, 0, 0, offset, //
-      0, 1, 0, 0, offset, //
-      0, 0, 1, 0, offset, //
+      contrastFactor, 0, 0, 0, redOffset, //
+      0, contrastFactor, 0, 0, greenOffset, //
+      0, 0, contrastFactor * blueLightFactor, 0, blueOffset, //
       0, 0, 0, 1, 0, //
     ];
   }
