@@ -9,6 +9,7 @@ import 'package:xml/xml.dart' as xml;
 
 import '../../domain/entities/book_format.dart';
 import '../../domain/repositories/cover_extractor.dart';
+import '../comics/comic_extractor.dart';
 
 /// Estrae un'immagine di copertina per la card della libreria: la copertina
 /// incorporata nel manifest per EPUB (lo standard del formato — non un vero
@@ -17,6 +18,8 @@ import '../../domain/repositories/cover_extractor.dart';
 /// Best-effort: se il file è malformato o non ha una copertina riconoscibile
 /// ritorna `null` senza bloccare l'importazione del libro.
 class ArchiveCoverExtractor implements CoverExtractor {
+  final ComicExtractor _comicExtractor = ComicExtractor();
+
   @override
   Future<String?> extract({
     required String bookId,
@@ -38,6 +41,12 @@ class ArchiveCoverExtractor implements CoverExtractor {
         BookFormat.pdf => await _extractPdfCover(
           sourceFilePath,
           bookId,
+          coversDir.path,
+        ),
+        BookFormat.cbz || BookFormat.cbr => await _extractComicCover(
+          sourceFilePath,
+          bookId,
+          format,
           coversDir.path,
         ),
       };
@@ -123,6 +132,26 @@ class ArchiveCoverExtractor implements CoverExtractor {
       if (test(item)) return item;
     }
     return null;
+  }
+
+  Future<String?> _extractComicCover(
+    String sourceFilePath,
+    String bookId,
+    BookFormat format,
+    String coversDirPath,
+  ) async {
+    final pages = await _comicExtractor.extractPages(
+      bookId: bookId,
+      archivePath: sourceFilePath,
+      format: format,
+    );
+    if (pages.isEmpty) return null;
+    final destination = p.join(
+      coversDirPath,
+      '$bookId${p.extension(pages.first.path)}',
+    );
+    await File(destination).writeAsBytes(await pages.first.readAsBytes());
+    return destination;
   }
 
   Future<String?> _extractPdfCover(

@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Necessario per il controllo aggiornamenti in-app (chiamata alle
+         GitHub Releases API). -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="EasyReader"
         android:name="${applicationName}"
@@ -33,6 +36,9 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <data android:mimeType="application/epub+zip"/>
                 <data android:mimeType="application/pdf"/>
+                <data android:mimeType="application/vnd.comicbook+zip"/>
+                <data android:mimeType="application/vnd.comicbook-rar"/>
+                <data android:mimeType="application/x-mobipocket-ebook"/>
                 <data android:mimeType="application/octet-stream"/>
             </intent-filter>
             <!-- Idem per la condivisione di più file EPUB/PDF insieme. -->
@@ -41,6 +47,9 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <data android:mimeType="application/epub+zip"/>
                 <data android:mimeType="application/pdf"/>
+                <data android:mimeType="application/vnd.comicbook+zip"/>
+                <data android:mimeType="application/vnd.comicbook-rar"/>
+                <data android:mimeType="application/x-mobipocket-ebook"/>
                 <data android:mimeType="application/octet-stream"/>
             </intent-filter>
             <!-- Compare EasyReader anche nel menu "Apri con" quando si tocca
@@ -52,6 +61,9 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <data android:mimeType="application/epub+zip"/>
                 <data android:mimeType="application/pdf"/>
+                <data android:mimeType="application/vnd.comicbook+zip"/>
+                <data android:mimeType="application/vnd.comicbook-rar"/>
+                <data android:mimeType="application/x-mobipocket-ebook"/>
                 <data android:mimeType="application/octet-stream"/>
             </intent-filter>
         </activity>

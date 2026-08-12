@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_epub_viewer/flutter_epub_viewer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 import '../../data/filters/epub_theme_builder.dart';
 import '../../domain/entities/book.dart';
@@ -15,15 +16,34 @@ class EpubReaderView extends ConsumerStatefulWidget {
   final Book book;
   final FilterProfile profile;
 
-  const EpubReaderView({super.key, required this.book, required this.profile});
+  /// Il controller vive in [EpubReaderView] ma è passato dall'esterno perché
+  /// il pannello di ricerca, aperto dalla barra in alto in `ReaderScreen`,
+  /// deve poter chiamare `search`/`display` sulla stessa istanza collegata
+  /// alla WebView, non su un controller separato e "muto".
+  final EpubController controller;
+
+  /// Notificato quando l'epub ha finito il caricamento iniziale: `ReaderScreen`
+  /// lo usa per abilitare i pulsanti di ricerca e lettura vocale solo a quel
+  /// punto, prima la WebView non risponderebbe alle richieste.
+  final VoidCallback? onLoaded;
+
+  const EpubReaderView({
+    super.key,
+    required this.book,
+    required this.profile,
+    required this.controller,
+    this.onLoaded,
+  });
 
   @override
   ConsumerState<EpubReaderView> createState() => _EpubReaderViewState();
 }
 
 class _EpubReaderViewState extends ConsumerState<EpubReaderView> {
-  final _controller = EpubController();
+  EpubController get _controller => widget.controller;
+  final _tts = FlutterTts();
   bool _epubLoaded = false;
+  bool _isSpeaking = false;
 
   // Caricati una sola volta in initState: l'istanza di EpubSource deve
   // restare stabile fra un rebuild e l'altro, altrimenti ogni tocco dello
@@ -36,7 +56,15 @@ class _EpubReaderViewState extends ConsumerState<EpubReaderView> {
   @override
   void initState() {
     super.initState();
+    _tts.awaitSpeakCompletion(true);
     _bootstrap();
+  }
+
+  @override
+  void dispose() {
+    _isSpeaking = false;
+    _tts.stop();
+    super.dispose();
   }
 
   Future<void> _bootstrap() async {
@@ -75,6 +103,32 @@ class _EpubReaderViewState extends ConsumerState<EpubReaderView> {
     }
   }
 
+  Future<void> _toggleReadAloud() async {
+    if (_isSpeaking) {
+      setState(() => _isSpeaking = false);
+      await _tts.stop();
+      return;
+    }
+    setState(() => _isSpeaking = true);
+    while (_isSpeaking && mounted) {
+      final extracted = await _controller.extractCurrentPageText();
+      final text = extracted.text?.trim() ?? '';
+      if (!_isSpeaking || !mounted) break;
+      if (text.isNotEmpty) {
+        await _tts.speak(text);
+      }
+      if (!_isSpeaking || !mounted) break;
+      final location = await _controller.getCurrentLocation();
+      if (location.progress >= 0.999) break;
+      _controller.next();
+      // Lascia il tempo alla WebView di completare il cambio pagina prima
+      // di estrarre il testo della pagina successiva, altrimenti si rischia
+      // di leggere ancora il contenuto di quella appena lasciata.
+      await Future.delayed(const Duration(milliseconds: 400));
+    }
+    if (mounted) setState(() => _isSpeaking = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!_ready) {
@@ -83,34 +137,53 @@ class _EpubReaderViewState extends ConsumerState<EpubReaderView> {
     return Column(
       children: [
         Expanded(
-          child: EpubViewer(
-            epubController: _controller,
-            epubSource: _epubSource!,
-            initialCfi: _initialCfi,
-            displaySettings: EpubDisplaySettings(
-              fontSize: widget.profile.fontSize.round(),
-              // Espliciti (anche se coincidono con i default del pacchetto)
-              // per garantire lo sfoglio a pagine invece dello scroll
-              // continuo: manager continuo che precarica i capitoli,
-              // ma li mostra impaginati uno schermo alla volta.
-              flow: EpubFlow.paginated,
-              manager: EpubManager.continuous,
-              snap: true,
-              theme: buildEpubTheme(widget.profile),
-            ),
-            onEpubLoaded: () => setState(() => _epubLoaded = true),
-            onRelocated: (location) {
-              ref
-                  .read(readingProgressRepositoryProvider)
-                  .save(
-                    ReadingProgress(
-                      bookId: widget.book.id,
-                      position: location.startCfi,
-                      percentage: location.progress,
-                      updatedAt: DateTime.now(),
-                    ),
-                  );
-            },
+          child: Stack(
+            children: [
+              EpubViewer(
+                epubController: _controller,
+                epubSource: _epubSource!,
+                initialCfi: _initialCfi,
+                displaySettings: EpubDisplaySettings(
+                  fontSize: widget.profile.fontSize.round(),
+                  // Espliciti (anche se coincidono con i default del
+                  // pacchetto) per garantire lo sfoglio a pagine invece dello
+                  // scroll continuo: manager continuo che precarica i
+                  // capitoli, ma li mostra impaginati uno schermo alla volta.
+                  flow: EpubFlow.paginated,
+                  manager: EpubManager.continuous,
+                  snap: true,
+                  theme: buildEpubTheme(widget.profile),
+                ),
+                onEpubLoaded: () {
+                  setState(() => _epubLoaded = true);
+                  widget.onLoaded?.call();
+                },
+                onRelocated: (location) {
+                  ref
+                      .read(readingProgressRepositoryProvider)
+                      .save(
+                        ReadingProgress(
+                          bookId: widget.book.id,
+                          position: location.startCfi,
+                          percentage: location.progress,
+                          updatedAt: DateTime.now(),
+                        ),
+                      );
+                },
+              ),
+              if (_epubLoaded)
+                Positioned(
+                  right: 16,
+                  bottom: 16,
+                  child: FloatingActionButton(
+                    tooltip: _isSpeaking
+                        ? 'Interrompi lettura vocale'
+                        : 'Leggi ad alta voce',
+                    onPressed: _toggleReadAloud,
+                    child: Icon(_isSpeaking ? Icons.stop : Icons.volume_up),
+                  ),
+                ),
+            ],
           ),
         ),
         ReaderProgressBar(

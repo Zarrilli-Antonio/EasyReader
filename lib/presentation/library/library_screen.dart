@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../domain/entities/book.dart';
 import '../../domain/entities/book_format.dart';
@@ -30,9 +31,33 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
   @override
   void initState() {
     super.initState();
-    _handleInitialShare();
-    _shareSubscription = ReceiveSharingIntent.instance.getMediaStream().listen(
-      _handleSharedFiles,
+    // receive_sharing_intent non supporta Windows/desktop in generale: la
+    // condivisione da altre app è un concetto mobile, non chiamarlo altrove
+    // per evitare una MissingPluginException all'avvio.
+    if (Platform.isAndroid || Platform.isIOS) {
+      _handleInitialShare();
+      _shareSubscription = ReceiveSharingIntent.instance
+          .getMediaStream()
+          .listen(_handleSharedFiles);
+    }
+    _checkForUpdate();
+  }
+
+  Future<void> _checkForUpdate() async {
+    final update = await ref.read(updateCheckerProvider).checkForUpdate();
+    if (!mounted || update == null) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 8),
+        content: Text('Versione ${update.version} disponibile'),
+        action: SnackBarAction(
+          label: 'Scarica',
+          onPressed: () => launchUrl(
+            Uri.parse(update.releaseUrl),
+            mode: LaunchMode.externalApplication,
+          ),
+        ),
+      ),
     );
   }
 
@@ -441,9 +466,11 @@ class _CoverImage extends StatelessWidget {
       color: Theme.of(context).colorScheme.surfaceContainerHighest,
       alignment: Alignment.center,
       child: Icon(
-        book.format == BookFormat.epub
-            ? Icons.menu_book_outlined
-            : Icons.picture_as_pdf_outlined,
+        switch (book.format) {
+          BookFormat.epub => Icons.menu_book_outlined,
+          BookFormat.pdf => Icons.picture_as_pdf_outlined,
+          BookFormat.cbz || BookFormat.cbr => Icons.auto_stories_outlined,
+        },
         size: 40,
         color: Theme.of(context).colorScheme.onSurfaceVariant,
       ),

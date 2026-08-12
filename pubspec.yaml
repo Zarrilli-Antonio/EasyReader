@@ -44,10 +44,28 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^33.2.13
   uuid: ^4.6.0
   drift_flutter: ^0.3.1
-  archive: ^4.0.9
+  archive: ^3.1.6
   xml: ^6.6.1
   pdfx: ^2.9.2
   receive_sharing_intent: ^1.9.0
+  http: ^1.6.0
+  package_info_plus: ^9.0.1
+  url_launcher: ^6.3.2
+  flutter_tts: ^4.2.5
+  dart_mobi: ^1.0.2
+  rar: ^0.3.0
+  html: ^0.15.6
+  epub_view: ^3.2.0
+
+# dart_mobi dichiara archive ^4.0.1 ma non lo usa mai (import morto in
+# dart_mobi_utils.dart) — forziamo la 3.x richiesta da epubx/epub_view senza
+# rischio, altrimenti le due dipendenze sarebbero incompatibili tra loro.
+dependency_overrides:
+  archive: ^3.1.6
+  # Stesso discorso per `image`: flutter_launcher_icons è uno strumento
+  # dev-time (non entra nell'app compilata), quindi forzare la versione
+  # richiesta da epubx non ha effetti sull'app in esecuzione.
+  image: ^3.0.8
 
 dev_dependencies:
   flutter_test:
@@ -84,9 +102,11 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # Font per dislessia: caricato a runtime come byte grezzi e iniettato via
-  # @font-face nella WebView dell'EPUB (non un font "nativo" di Flutter),
-  # quindi va dichiarato come asset generico e non nella sezione fonts.
+  # Font per dislessia: sulla WebView dell'EPUB (Android/iOS/macOS) viene
+  # caricato a runtime come byte grezzi e iniettato via @font-face, per questo
+  # è dichiarato anche come asset generico; sul motore nativo di Windows
+  # (epub_view) serve invece come famiglia di font Flutter vera e propria,
+  # dichiarata sotto in "fonts".
   assets:
     - assets/fonts/OpenDyslexic-Regular.ttf
     - assets/fonts/OpenDyslexic-Bold.ttf
@@ -113,6 +133,12 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
+  fonts:
+    - family: OpenDyslexic
+      fonts:
+        - asset: assets/fonts/OpenDyslexic-Regular.ttf
+        - asset: assets/fonts/OpenDyslexic-Bold.ttf
+          weight: 700
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

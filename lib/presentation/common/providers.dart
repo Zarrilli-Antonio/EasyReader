@@ -6,6 +6,7 @@ import '../../data/repositories/drift_book_repository.dart';
 import '../../data/repositories/drift_filter_profile_repository.dart';
 import '../../data/repositories/drift_reading_progress_repository.dart';
 import '../../data/repositories/drift_shelf_repository.dart';
+import '../../data/updates/update_checker.dart';
 import '../../domain/entities/book.dart';
 import '../../domain/entities/reading_progress.dart';
 import '../../domain/entities/reading_stats.dart';
@@ -58,6 +59,8 @@ final deleteBookUseCaseProvider = Provider<DeleteBookUseCase>(
     ref.watch(readingProgressRepositoryProvider),
   ),
 );
+
+final updateCheckerProvider = Provider<UpdateChecker>((ref) => UpdateChecker());
 
 final deleteShelfUseCaseProvider = Provider<DeleteShelfUseCase>(
   (ref) => DeleteShelfUseCase(
