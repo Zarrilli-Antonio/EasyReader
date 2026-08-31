@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/filters/filter_overlay.dart';
 import '../../domain/entities/book.dart';
 import '../../domain/entities/book_format.dart';
+import '../../l10n/app_localizations.dart';
 import '../common/providers.dart';
 import '../filters/filter_panel.dart';
 import '../filters/filter_providers.dart';
@@ -70,6 +71,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final filterAsync = ref.watch(activeFilterProvider);
 
     final appBar = AppBar(
@@ -78,7 +80,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
         if (_epubController != null || _nativeEpubController != null)
           IconButton(
             icon: const Icon(Icons.search),
-            tooltip: 'Cerca nel libro',
+            tooltip: l10n.searchInBook,
             onPressed: _epubLoaded
                 ? () => showModalBottomSheet(
                     context: context,
@@ -93,7 +95,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
           ),
         IconButton(
           icon: const Icon(Icons.tune),
-          tooltip: 'Filtri di lettura',
+          tooltip: l10n.readingFilters,
           onPressed: () => showModalBottomSheet(
             context: context,
             isScrollControlled: true,
@@ -144,7 +146,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
       ),
       error: (error, _) => Scaffold(
         appBar: appBar,
-        body: Center(child: Text('Errore filtri: $error')),
+        body: Center(child: Text(l10n.filtersErrorMessage('$error'))),
       ),
     );
   }

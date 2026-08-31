@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_epub_viewer/flutter_epub_viewer.dart';
 
+import '../../l10n/app_localizations.dart';
+
 /// Ricerca full-text nel libro aperto, delegata a epub.js tramite lo stesso
 /// [EpubController] collegato alla WebView del reader. Selezionando un
 /// risultato si naviga al suo CFI e il pannello si chiude.
@@ -40,6 +42,7 @@ class _EpubSearchSheetState extends State<EpubSearchSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
@@ -62,10 +65,10 @@ class _EpubSearchSheetState extends State<EpubSearchSheet> {
               controller: _queryController,
               autofocus: true,
               textInputAction: TextInputAction.search,
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.search),
-                hintText: 'Cerca nel libro…',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search),
+                hintText: l10n.searchInBookHint,
+                border: const OutlineInputBorder(),
               ),
               onSubmitted: _search,
             ),
@@ -74,9 +77,9 @@ class _EpubSearchSheetState extends State<EpubSearchSheet> {
             if (!_searching &&
                 _results.isEmpty &&
                 _queryController.text.isNotEmpty)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child: Text('Nessun risultato'),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Text(l10n.noResults),
               ),
             ConstrainedBox(
               constraints: BoxConstraints(

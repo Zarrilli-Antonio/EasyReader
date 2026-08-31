@@ -9,6 +9,7 @@ import '../../data/filters/epub_theme_builder.dart';
 import '../../domain/entities/book.dart';
 import '../../domain/entities/filter_profile.dart';
 import '../../domain/entities/reading_progress.dart';
+import '../../l10n/app_localizations.dart';
 import '../common/providers.dart';
 import 'reader_progress_bar.dart';
 
@@ -93,10 +94,17 @@ class _EpubReaderViewState extends ConsumerState<EpubReaderView> {
   void didUpdateWidget(covariant EpubReaderView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!_epubLoaded) return;
-    if (oldWidget.profile.backgroundColor != widget.profile.backgroundColor ||
-        oldWidget.profile.lineHeight != widget.profile.lineHeight ||
-        oldWidget.profile.useDyslexiaFont != widget.profile.useDyslexiaFont) {
-      _controller.updateTheme(theme: buildEpubTheme(widget.profile));
+    final old = oldWidget.profile;
+    final current = widget.profile;
+    if (old.backgroundColor != current.backgroundColor ||
+        old.lineHeight != current.lineHeight ||
+        old.useDyslexiaFont != current.useDyslexiaFont ||
+        old.brightness != current.brightness ||
+        old.contrast != current.contrast ||
+        old.colorTemperature != current.colorTemperature ||
+        old.blueLightFilterEnabled != current.blueLightFilterEnabled ||
+        old.eInkModeEnabled != current.eInkModeEnabled) {
+      _controller.updateTheme(theme: buildEpubTheme(current));
     }
     if (oldWidget.profile.fontSize != widget.profile.fontSize) {
       _controller.setFontSize(fontSize: widget.profile.fontSize);
@@ -134,62 +142,52 @@ class _EpubReaderViewState extends ConsumerState<EpubReaderView> {
     if (!_ready) {
       return const Center(child: CircularProgressIndicator());
     }
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         Expanded(
-          child: Stack(
-            children: [
-              EpubViewer(
-                epubController: _controller,
-                epubSource: _epubSource!,
-                initialCfi: _initialCfi,
-                displaySettings: EpubDisplaySettings(
-                  fontSize: widget.profile.fontSize.round(),
-                  // Espliciti (anche se coincidono con i default del
-                  // pacchetto) per garantire lo sfoglio a pagine invece dello
-                  // scroll continuo: manager continuo che precarica i
-                  // capitoli, ma li mostra impaginati uno schermo alla volta.
-                  flow: EpubFlow.paginated,
-                  manager: EpubManager.continuous,
-                  snap: true,
-                  theme: buildEpubTheme(widget.profile),
-                ),
-                onEpubLoaded: () {
-                  setState(() => _epubLoaded = true);
-                  widget.onLoaded?.call();
-                },
-                onRelocated: (location) {
-                  ref
-                      .read(readingProgressRepositoryProvider)
-                      .save(
-                        ReadingProgress(
-                          bookId: widget.book.id,
-                          position: location.startCfi,
-                          percentage: location.progress,
-                          updatedAt: DateTime.now(),
-                        ),
-                      );
-                },
-              ),
-              if (_epubLoaded)
-                Positioned(
-                  right: 16,
-                  bottom: 16,
-                  child: FloatingActionButton(
-                    tooltip: _isSpeaking
-                        ? 'Interrompi lettura vocale'
-                        : 'Leggi ad alta voce',
-                    onPressed: _toggleReadAloud,
-                    child: Icon(_isSpeaking ? Icons.stop : Icons.volume_up),
-                  ),
-                ),
-            ],
+          child: EpubViewer(
+            epubController: _controller,
+            epubSource: _epubSource!,
+            initialCfi: _initialCfi,
+            displaySettings: EpubDisplaySettings(
+              fontSize: widget.profile.fontSize.round(),
+              // Espliciti (anche se coincidono con i default del pacchetto)
+              // per garantire lo sfoglio a pagine invece dello scroll
+              // continuo: manager continuo che precarica i capitoli, ma li
+              // mostra impaginati uno schermo alla volta.
+              flow: EpubFlow.paginated,
+              manager: EpubManager.continuous,
+              snap: true,
+              theme: buildEpubTheme(widget.profile),
+            ),
+            onEpubLoaded: () {
+              setState(() => _epubLoaded = true);
+              widget.onLoaded?.call();
+            },
+            onRelocated: (location) {
+              ref
+                  .read(readingProgressRepositoryProvider)
+                  .save(
+                    ReadingProgress(
+                      bookId: widget.book.id,
+                      position: location.startCfi,
+                      percentage: location.progress,
+                      updatedAt: DateTime.now(),
+                    ),
+                  );
+            },
           ),
         ),
         ReaderProgressBar(
           bookId: widget.book.id,
           onPrevious: _epubLoaded ? _controller.prev : null,
           onNext: _epubLoaded ? _controller.next : null,
+          trailing: IconButton(
+            tooltip: _isSpeaking ? l10n.stopReadAloud : l10n.readAloud,
+            icon: Icon(_isSpeaking ? Icons.stop : Icons.volume_up),
+            onPressed: _epubLoaded ? _toggleReadAloud : null,
+          ),
         ),
       ],
     );

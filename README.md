@@ -1,102 +1,101 @@
 <p align="center">
-  <img src="assets/icon/icon.png" width="112" alt="Icona EasyReader">
+  <img src="assets/icon/icon.png" width="112" alt="EasyReader icon">
 </p>
 
 <h1 align="center">EasyReader</h1>
 
 <p align="center">
-  Un lettore di ebook pensato attorno a un'unica idea: il <strong>benessere di lettura</strong>.<br>
-  Filtri di comfort visivo personalizzabili, librerie organizzate, statistiche di lettura.
+  An ebook reader built around a single idea: <strong>reading comfort</strong>.<br>
+  Customizable visual comfort filters, organized libraries, reading statistics.
 </p>
 
 <p align="center">
   <img alt="Flutter" src="https://img.shields.io/badge/Flutter-3.44-02569B?logo=flutter&logoColor=white">
-  <img alt="Piattaforme" src="https://img.shields.io/badge/piattaforme-Android%20%7C%20macOS-informational">
-  <img alt="Stato" src="https://img.shields.io/badge/stato-in%20sviluppo-yellow">
+  <img alt="Platforms" src="https://img.shields.io/badge/platforms-Android%20%7C%20macOS-informational">
+  <img alt="Status" src="https://img.shields.io/badge/status-in%20development-yellow">
 </p>
 
 ---
 
-## Cos'è
+## What it is
 
-EasyReader è un lettore EPUB/PDF con un focus preciso: rendere la lettura più
-comoda per gli occhi tramite filtri di pagina regolabili in tempo reale,
-invece di limitarsi alla solita modalità chiara/scura. È un progetto
-personale, sviluppato in Flutter per restare multipiattaforma fin dalla
-base architetturale.
+EasyReader is an EPUB/PDF reader with a precise focus: making reading easier
+on the eyes through page filters adjustable in real time, instead of just
+the usual light/dark mode. It's a personal project, built in Flutter to
+stay cross-platform from the ground up.
 
-## Funzionalità
+## Features
 
-**Lettura**
-- Formati supportati: **EPUB** e **PDF**
-- Filtri di pagina in tempo reale: colore di sfondo, overlay colorato
-  (utile anche per esigenze di comfort visivo come la dislessia), luminosità,
-  filtro carta con texture, dimensione del testo
-- Barra di avanzamento persistente con percentuale letta e, per i PDF,
-  pagina corrente su totale
-- Ripresa automatica dal punto esatto in cui si era interrotta la lettura
+**Reading**
+- Supported formats: **EPUB** and **PDF**
+- Real-time page filters: background color, color overlay
+  (also useful for visual comfort needs such as dyslexia), brightness,
+  paper filter with texture, text size
+- Persistent progress bar with percentage read and, for PDFs,
+  current page out of total
+- Automatic resume from the exact point where reading was interrupted
 
-**Libreria**
-- Griglia a colonne adattive in base allo spazio disponibile (2 su
-  smartphone, di più su una finestra desktop più larga)
-- Copertine automatiche: estratte dal manifest per gli EPUB, renderizzate
-  dalla prima pagina per i PDF
-- Librerie personalizzate per organizzare i libri, ciascuna con nome,
-  colore e icona a scelta
-- Rinomina, sposta in libreria, elimina — tutto da un tocco prolungato
-- Import diretto da file, oppure **condividendo** un EPUB/PDF da un'altra
-  app o aprendolo direttamente con EasyReader
+**Library**
+- Adaptive-column grid based on available space (2 on
+  smartphone, more on a wider desktop window)
+- Automatic covers: extracted from the manifest for EPUBs, rendered
+  from the first page for PDFs
+- Custom shelves to organize books, each with a chosen name,
+  color and icon
+- Rename, move to shelf, delete — all from a long press
+- Import directly from a file, or by **sharing** an EPUB/PDF from another
+  app or opening it directly with EasyReader
 
-**Statistiche**
-- Per ogni libro: tempo di lettura, numero di sessioni, percentuale,
-  data di aggiunta e ultima lettura
-- Vista d'insieme: libri in libreria, completati, in lettura, tempo di
-  lettura totale, libri più letti
+**Statistics**
+- Per book: reading time, number of sessions, percentage,
+  date added and last read
+- Overview: books in library, completed, in progress, total reading
+  time, most-read books
 
-## Stack tecnico
+## Tech stack
 
-| Livello | Scelta |
+| Layer | Choice |
 |---|---|
 | UI | Flutter, [Riverpod](https://riverpod.dev) |
-| Persistenza | [drift](https://drift.simonbinder.eu) (SQLite) |
-| Motore EPUB | [flutter_epub_viewer](https://pub.dev/packages/flutter_epub_viewer) |
-| Motore PDF | [syncfusion_flutter_pdfviewer](https://pub.dev/packages/syncfusion_flutter_pdfviewer) + [pdfx](https://pub.dev/packages/pdfx) (copertine) |
-| Copertine EPUB | [archive](https://pub.dev/packages/archive) + [xml](https://pub.dev/packages/xml) (lettura del manifest) |
-| Condivisione | [receive_sharing_intent](https://pub.dev/packages/receive_sharing_intent) |
+| Persistence | [drift](https://drift.simonbinder.eu) (SQLite) |
+| EPUB engine | [flutter_epub_viewer](https://pub.dev/packages/flutter_epub_viewer) |
+| PDF engine | [syncfusion_flutter_pdfviewer](https://pub.dev/packages/syncfusion_flutter_pdfviewer) + [pdfx](https://pub.dev/packages/pdfx) (covers) |
+| EPUB covers | [archive](https://pub.dev/packages/archive) + [xml](https://pub.dev/packages/xml) (manifest parsing) |
+| Sharing | [receive_sharing_intent](https://pub.dev/packages/receive_sharing_intent) |
 
-Architettura a tre livelli (`domain` → `data` → `presentation`), con i
-repository dietro interfacce per tenere la logica applicativa indipendente
-dal motore di rendering o dal database.
+Three-layer architecture (`domain` → `data` → `presentation`), with
+repositories behind interfaces to keep application logic independent
+from the rendering engine or the database.
 
 ```
 lib/
-├── domain/            # entità, interfacce dei repository, use case
-├── data/              # implementazioni drift, estrazione copertine, filtri
-└── presentation/       # schermate e widget, organizzati per funzionalità
+├── domain/            # entities, repository interfaces, use cases
+├── data/              # drift implementations, cover extraction, filters
+└── presentation/       # screens and widgets, organized by feature
 ```
 
-## Piattaforme
+## Platforms
 
-Sviluppato Android-first, con macOS come seconda piattaforma già
-funzionante grazie alla natura multipiattaforma di Flutter — l'unico punto
-che richiede un adattamento nativo è la conversione di formati futuri come
+Developed Android-first, with macOS as a second platform already
+working thanks to Flutter's cross-platform nature — the only part
+that requires native adaptation is the conversion of future formats like
 MOBI/AZW3.
 
-## Sviluppo
+## Development
 
 ```bash
 flutter pub get
-dart run build_runner build   # genera il codice drift
+dart run build_runner build   # generates the drift code
 ```
 
 Build:
 
 ```bash
 flutter build apk --debug     # Android
-flutter build macos --debug   # macOS (richiede Xcode e CocoaPods)
+flutter build macos --debug   # macOS (requires Xcode and CocoaPods)
 ```
 
-Verifica:
+Checks:
 
 ```bash
 flutter analyze
@@ -105,13 +104,14 @@ flutter test
 
 ## Roadmap
 
-- [ ] Supporto MOBI, AZW3, FB2 (tramite conversione)
-- [ ] Temperatura colore e contrasto tra i filtri
-- [ ] Font dedicati alla leggibilità (es. dislessia)
-- [ ] Promemoria pausa in lettura
-- [ ] Windows e Linux
+- [x] MOBI, AZW3 support (via conversion)
+- [ ] FB2 support
+- [x] Color temperature and contrast among the filters
+- [x] Fonts dedicated to readability (e.g. dyslexia)
+- [ ] Reading break reminder
+- [ ] Windows and Linux (code ready for Windows, not yet verifiable on a real Windows host; Linux not started yet)
 
-## Licenza
+## License
 
-Progetto personale, non ancora distribuito. Nessuna licenza pubblica al
-momento.
+Personal project, not yet distributed. No public license at
+this time.

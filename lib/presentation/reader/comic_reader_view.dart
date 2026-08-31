@@ -7,6 +7,7 @@ import '../../data/comics/comic_extractor.dart';
 import '../../domain/entities/book.dart';
 import '../../domain/entities/filter_profile.dart';
 import '../../domain/entities/reading_progress.dart';
+import '../../l10n/app_localizations.dart';
 import '../common/providers.dart';
 import 'reader_progress_bar.dart';
 
@@ -65,17 +66,16 @@ class _ComicReaderViewState extends ConsumerState<ComicReaderView> {
       if (initialIndex > 0 && initialIndex < pages.length) {
         _controller.jumpToPage(initialIndex);
       }
-    } on UnsupportedError catch (error) {
+    } on UnsupportedError catch (_) {
       if (!mounted) return;
       setState(() {
-        _error =
-            error.message ?? 'Formato non supportato su questa piattaforma';
+        _error = AppLocalizations.of(context)!.cbrUnsupportedOnPlatform;
         _loading = false;
       });
     } catch (_) {
       if (!mounted) return;
       setState(() {
-        _error = 'Impossibile aprire questo fumetto';
+        _error = AppLocalizations.of(context)!.cannotOpenComic;
         _loading = false;
       });
     }
@@ -109,7 +109,9 @@ class _ComicReaderViewState extends ConsumerState<ComicReaderView> {
       return const Center(child: CircularProgressIndicator());
     }
     if (_error != null || _pages.isEmpty) {
-      return Center(child: Text(_error ?? 'Nessuna pagina trovata'));
+      return Center(
+        child: Text(_error ?? AppLocalizations.of(context)!.noPagesFound),
+      );
     }
     return Column(
       children: [

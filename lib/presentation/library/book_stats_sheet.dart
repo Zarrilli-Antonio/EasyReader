@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/book.dart';
+import '../../l10n/app_localizations.dart';
 import '../common/providers.dart';
 
 Future<void> showBookStatsSheet(BuildContext context, Book book) {
@@ -18,6 +19,7 @@ class _BookStatsSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final progress = ref.watch(readingProgressProvider(book.id)).valueOrNull;
     final percentage = ((progress?.percentage ?? 0) * 100).round();
 
@@ -49,20 +51,20 @@ class _BookStatsSheet extends ConsumerWidget {
             const SizedBox(height: 20),
             _StatRow(
               icon: Icons.donut_large_outlined,
-              label: 'Letto',
+              label: l10n.statLabelRead,
               value: '$percentage%',
             ),
             _StatRow(
               icon: Icons.calendar_today_outlined,
-              label: 'Aggiunto il',
+              label: l10n.statLabelAddedOn,
               value: _formatDate(book.addedAt),
             ),
             _StatRow(
               icon: Icons.history_outlined,
-              label: 'Ultima lettura',
+              label: l10n.statLabelLastRead,
               value: book.lastOpenedAt != null
                   ? _formatDate(book.lastOpenedAt!)
-                  : 'Mai',
+                  : l10n.never,
             ),
           ],
         ),

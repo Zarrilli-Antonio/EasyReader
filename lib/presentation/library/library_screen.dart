@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../domain/entities/book.dart';
 import '../../domain/entities/book_format.dart';
 import '../../domain/entities/shelf.dart';
+import '../../l10n/app_localizations.dart';
 import '../common/overlay_utils.dart';
 import '../common/providers.dart';
 import '../reader/reader_screen.dart';
@@ -47,12 +48,13 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
   Future<void> _checkForUpdate() async {
     final update = await ref.read(updateCheckerProvider).checkForUpdate();
     if (!mounted || update == null) return;
+    final l10n = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         duration: const Duration(seconds: 8),
-        content: Text('Versione ${update.version} disponibile'),
+        content: Text(l10n.updateAvailable(update.version)),
         action: SnackBarAction(
-          label: 'Scarica',
+          label: l10n.download,
           onPressed: () => launchUrl(
             Uri.parse(update.releaseUrl),
             mode: LaunchMode.externalApplication,
@@ -93,11 +95,10 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
     }
 
     if (!mounted) return;
+    final l10n = AppLocalizations.of(context)!;
     final message = imported == 0
-        ? 'Formato non supportato: solo EPUB e PDF'
-        : imported == 1
-        ? 'Libro importato dalla condivisione'
-        : '$imported libri importati dalla condivisione';
+        ? l10n.unsupportedFormatMessage
+        : l10n.importedBooksMessage(imported);
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
@@ -105,6 +106,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final booksAsync = ref.watch(booksProvider);
     final shelvesAsync = ref.watch(shelvesProvider);
 
@@ -121,18 +123,18 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(selectedShelf?.name ?? 'La mia libreria'),
+        title: Text(selectedShelf?.name ?? l10n.myLibrary),
         actions: [
           IconButton(
             icon: const Icon(Icons.query_stats_outlined),
-            tooltip: 'Statistiche di lettura',
+            tooltip: l10n.readingStats,
             onPressed: () => Navigator.of(
               context,
             ).push(MaterialPageRoute(builder: (_) => const StatisticsScreen())),
           ),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
-            tooltip: 'Impostazioni',
+            tooltip: l10n.settings,
             onPressed: () => Navigator.of(
               context,
             ).push(MaterialPageRoute(builder: (_) => const SettingsScreen())),
@@ -180,7 +182,8 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
                       );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, _) => Center(child: Text('Errore: $error')),
+              error: (error, _) =>
+                  Center(child: Text(l10n.libraryErrorMessage('$error'))),
             ),
           ),
         ],
@@ -191,16 +194,12 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
           final book = await importBook(shelfId: _selectedShelfId);
           if (book == null && context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  'Importazione annullata o formato non ancora supportato',
-                ),
-              ),
+              SnackBar(content: Text(l10n.importCancelledMessage)),
             );
           }
         },
         icon: const Icon(Icons.add),
-        label: const Text('Importa libro'),
+        label: Text(l10n.importBook),
       ),
     );
   }
@@ -309,6 +308,7 @@ class _LibraryGridTile extends ConsumerWidget {
     WidgetRef ref,
     Book book,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     final action = await showModalBottomSheet<_BookAction>(
       context: context,
       builder: (sheetContext) => SafeArea(
@@ -317,17 +317,17 @@ class _LibraryGridTile extends ConsumerWidget {
           children: [
             ListTile(
               leading: const Icon(Icons.edit_outlined),
-              title: const Text('Rinomina'),
+              title: Text(l10n.rename),
               onTap: () => Navigator.of(sheetContext).pop(_BookAction.rename),
             ),
             ListTile(
               leading: const Icon(Icons.drive_file_move_outlined),
-              title: const Text('Sposta in libreria'),
+              title: Text(l10n.moveToShelf),
               onTap: () => Navigator.of(sheetContext).pop(_BookAction.move),
             ),
             ListTile(
               leading: const Icon(Icons.query_stats_outlined),
-              title: const Text('Statistiche'),
+              title: Text(l10n.statsAction),
               onTap: () => Navigator.of(sheetContext).pop(_BookAction.stats),
             ),
             ListTile(
@@ -336,7 +336,7 @@ class _LibraryGridTile extends ConsumerWidget {
                 color: Theme.of(sheetContext).colorScheme.error,
               ),
               title: Text(
-                'Elimina',
+                l10n.delete,
                 style: TextStyle(
                   color: Theme.of(sheetContext).colorScheme.error,
                 ),
@@ -384,6 +384,7 @@ class _LibraryGridTile extends ConsumerWidget {
     WidgetRef ref,
     Book book,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     final shelves = ref.read(shelvesProvider).valueOrNull ?? const <Shelf>[];
     await showModalBottomSheet(
       context: context,
@@ -393,7 +394,7 @@ class _LibraryGridTile extends ConsumerWidget {
           children: [
             ListTile(
               leading: const Icon(Icons.clear),
-              title: const Text('Nessuna libreria'),
+              title: Text(l10n.noShelf),
               selected: book.shelfId == null,
               onTap: () async {
                 await ref
@@ -415,11 +416,9 @@ class _LibraryGridTile extends ConsumerWidget {
                 },
               ),
             if (shelves.isEmpty)
-              const Padding(
-                padding: EdgeInsets.all(16),
-                child: Text(
-                  'Nessuna libreria creata. Creane una dalla riga in alto.',
-                ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(l10n.noShelfCreatedHint),
               ),
           ],
         ),
@@ -432,21 +431,20 @@ class _LibraryGridTile extends ConsumerWidget {
     WidgetRef ref,
     Book book,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Eliminare il libro?'),
-        content: Text(
-          '"${book.title}" verrà rimosso dalla libreria insieme al file copiato sul dispositivo.',
-        ),
+        title: Text(l10n.deleteBookTitle),
+        content: Text(l10n.deleteBookMessage(book.title)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Annulla'),
+            child: Text(l10n.cancel),
           ),
           FilledButton.tonal(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Elimina'),
+            child: Text(l10n.delete),
           ),
         ],
       ),
@@ -492,6 +490,7 @@ class _EmptyLibrary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -501,14 +500,12 @@ class _EmptyLibrary extends StatelessWidget {
             const Icon(Icons.menu_book_outlined, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
             Text(
-              isFiltered ? 'Questa libreria è vuota' : 'Nessun libro ancora',
+              isFiltered ? l10n.emptyShelfTitle : l10n.emptyLibraryTitle,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
             Text(
-              isFiltered
-                  ? 'Tieni premuto su un libro in "Tutti i libri" per spostarlo qui.'
-                  : 'Importa un file EPUB o PDF per iniziare a leggere.',
+              isFiltered ? l10n.emptyShelfHint : l10n.emptyLibraryHint,
               textAlign: TextAlign.center,
             ),
           ],

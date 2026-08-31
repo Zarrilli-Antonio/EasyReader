@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data/filters/dyslexia_font_asset.dart';
+import 'l10n/app_localizations.dart';
+import 'presentation/common/locale_controller.dart';
 import 'presentation/filters/filter_providers.dart';
 import 'presentation/library/library_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DyslexiaFontAsset.preload();
-  runApp(const ProviderScope(child: EasyReaderApp()));
+  final prefs = await SharedPreferences.getInstance();
+  runApp(
+    ProviderScope(
+      overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
+      child: const EasyReaderApp(),
+    ),
+  );
 }
 
 /// Scritto a mano invece di `ColorScheme.fromSeed(seedColor: Colors.grey)`:
@@ -65,9 +74,13 @@ class EasyReaderApp extends ConsumerWidget {
     // impostazioni e dialoghi resterebbero colorati, rompendo l'effetto.
     final eInkModeEnabled =
         ref.watch(activeFilterProvider).valueOrNull?.eInkModeEnabled ?? false;
+    final locale = ref.watch(localeControllerProvider);
 
     return MaterialApp(
       title: 'EasyReader',
+      locale: locale,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
       theme: ThemeData(
         colorScheme: eInkModeEnabled
             ? _eInkColorScheme

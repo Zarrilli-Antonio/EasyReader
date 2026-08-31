@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
+
 /// Foglio di rinomina libro. Deliberatamente un bottom sheet e non un
 /// `AlertDialog`: quest'ultimo, con un `TextField` autofocus dentro, ha
 /// scatenato più volte un assert interno di Flutter sugli InheritedWidget
@@ -48,6 +50,7 @@ class _RenameBookSheetState extends State<_RenameBookSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final canSave = !_saving && _controller.text.trim().isNotEmpty;
     return Padding(
       padding: EdgeInsets.fromLTRB(
@@ -74,7 +77,7 @@ class _RenameBookSheetState extends State<_RenameBookSheet> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Rinomina libro',
+              l10n.renameBookTitle,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
@@ -90,7 +93,7 @@ class _RenameBookSheetState extends State<_RenameBookSheet> {
               width: double.infinity,
               child: FilledButton(
                 onPressed: canSave ? _save : null,
-                child: const Text('Salva'),
+                child: Text(l10n.save),
               ),
             ),
           ],

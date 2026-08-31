@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../domain/entities/shelf.dart';
 import '../../domain/entities/shelf_icon.dart';
+import '../../l10n/app_localizations.dart';
 import '../common/providers.dart';
 
 /// Apre il foglio di creazione/modifica di una libreria. Passare [existing]
@@ -50,6 +51,7 @@ class _ShelfEditorSheetState extends ConsumerState<_ShelfEditorSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isEditing = widget.existing != null;
     return Padding(
       padding: EdgeInsets.fromLTRB(
@@ -76,7 +78,7 @@ class _ShelfEditorSheetState extends ConsumerState<_ShelfEditorSheet> {
             ),
             const SizedBox(height: 16),
             Text(
-              isEditing ? 'Modifica libreria' : 'Nuova libreria',
+              isEditing ? l10n.editShelf : l10n.newShelf,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
@@ -84,13 +86,16 @@ class _ShelfEditorSheetState extends ConsumerState<_ShelfEditorSheet> {
               controller: _nameController,
               autofocus: !isEditing,
               textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration(
-                labelText: 'Nome',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: l10n.shelfNameLabel,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 20),
-            Text('Colore', style: Theme.of(context).textTheme.labelSmall),
+            Text(
+              l10n.colorLabel,
+              style: Theme.of(context).textTheme.labelSmall,
+            ),
             const SizedBox(height: 8),
             Wrap(
               spacing: 10,
@@ -116,7 +121,7 @@ class _ShelfEditorSheetState extends ConsumerState<_ShelfEditorSheet> {
               }).toList(),
             ),
             const SizedBox(height: 20),
-            Text('Icona', style: Theme.of(context).textTheme.labelSmall),
+            Text(l10n.iconLabel, style: Theme.of(context).textTheme.labelSmall),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -151,7 +156,7 @@ class _ShelfEditorSheetState extends ConsumerState<_ShelfEditorSheet> {
               width: double.infinity,
               child: FilledButton(
                 onPressed: _nameController.text.trim().isEmpty ? null : _save,
-                child: Text(isEditing ? 'Salva' : 'Crea libreria'),
+                child: Text(isEditing ? l10n.save : l10n.createShelf),
               ),
             ),
           ],

@@ -1,0 +1,132 @@
+{
+  "@@locale": "it",
+
+  "updateAvailable": "Versione {version} disponibile",
+  "@updateAvailable": {
+    "placeholders": { "version": {} }
+  },
+  "download": "Scarica",
+  "unsupportedFormatMessage": "Formato non supportato: solo EPUB e PDF",
+  "importedBooksMessage": "{count, plural, =1{Libro importato dalla condivisione} other{{count} libri importati dalla condivisione}}",
+  "@importedBooksMessage": {
+    "placeholders": { "count": {} }
+  },
+  "myLibrary": "La mia libreria",
+  "readingStats": "Statistiche di lettura",
+  "settings": "Impostazioni",
+  "libraryErrorMessage": "Errore: {error}",
+  "@libraryErrorMessage": {
+    "placeholders": { "error": {} }
+  },
+  "importCancelledMessage": "Importazione annullata o formato non ancora supportato",
+  "importBook": "Importa libro",
+  "rename": "Rinomina",
+  "moveToShelf": "Sposta in libreria",
+  "statsAction": "Statistiche",
+  "delete": "Elimina",
+  "noShelf": "Nessuna libreria",
+  "noShelfCreatedHint": "Nessuna libreria creata. Creane una dalla riga in alto.",
+  "deleteBookTitle": "Eliminare il libro?",
+  "deleteBookMessage": "\"{title}\" verrà rimosso dalla libreria insieme al file copiato sul dispositivo.",
+  "@deleteBookMessage": {
+    "placeholders": { "title": {} }
+  },
+  "cancel": "Annulla",
+  "emptyShelfTitle": "Questa libreria è vuota",
+  "emptyLibraryTitle": "Nessun libro ancora",
+  "emptyShelfHint": "Tieni premuto su un libro in \"Tutti i libri\" per spostarlo qui.",
+  "emptyLibraryHint": "Importa un file EPUB o PDF per iniziare a leggere.",
+  "allBooks": "Tutti i libri",
+  "newShelf": "Nuova libreria",
+  "editShelf": "Modifica libreria",
+  "deleteShelf": "Elimina libreria",
+  "deleteShelfTitle": "Eliminare la libreria?",
+  "deleteShelfMessage": "\"{name}\" verrà eliminata. I libri al suo interno restano nella libreria generale, senza essere cancellati.",
+  "@deleteShelfMessage": {
+    "placeholders": { "name": {} }
+  },
+  "shelfNameLabel": "Nome",
+  "colorLabel": "Colore",
+  "iconLabel": "Icona",
+  "save": "Salva",
+  "createShelf": "Crea libreria",
+  "renameBookTitle": "Rinomina libro",
+  "statLabelRead": "Letto",
+  "statLabelAddedOn": "Aggiunto il",
+  "statLabelLastRead": "Ultima lettura",
+  "never": "Mai",
+  "booksInLibrary": "Libri in libreria",
+  "completed": "Completati",
+  "inProgress": "In lettura",
+  "searchInBook": "Cerca nel libro",
+  "readingFilters": "Filtri di lettura",
+  "filtersErrorMessage": "Errore filtri: {error}",
+  "@filtersErrorMessage": {
+    "placeholders": { "error": {} }
+  },
+  "searchInBookHint": "Cerca nel libro…",
+  "searchInBookByChapterHint": "Cerca nel libro (per capitolo)…",
+  "noResults": "Nessun risultato",
+  "chapterFallback": "Capitolo {number}",
+  "@chapterFallback": {
+    "placeholders": { "number": {} }
+  },
+  "stopReadAloud": "Interrompi lettura vocale",
+  "readAloud": "Leggi ad alta voce",
+  "cbrUnsupportedOnPlatform": "Formato non supportato su questa piattaforma",
+  "cannotOpenComic": "Impossibile aprire questo fumetto",
+  "noPagesFound": "Nessuna pagina trovata",
+  "pageProgress": "Pagina {page} di {total} · {percent}%",
+  "@pageProgress": {
+    "placeholders": { "page": {}, "total": {}, "percent": {} }
+  },
+  "textSizeLabel": "Dimensione testo · {size}",
+  "@textSizeLabel": {
+    "placeholders": { "size": {} }
+  },
+  "lineHeightLabel": "Interlinea · {value}",
+  "@lineHeightLabel": {
+    "placeholders": { "value": {} }
+  },
+  "brightnessLabel": "Luminosità · {value}",
+  "@brightnessLabel": {
+    "placeholders": { "value": {} }
+  },
+  "contrastLabel": "Contrasto · {value}",
+  "@contrastLabel": {
+    "placeholders": { "value": {} }
+  },
+  "colorTemperatureLabel": "Temperatura colore · {state}",
+  "@colorTemperatureLabel": {
+    "placeholders": { "state": {} }
+  },
+  "warm": "caldo",
+  "cool": "freddo",
+  "neutral": "neutro",
+  "appearance": "Aspetto",
+  "eReaderMode": "Modalità e-reader",
+  "eReaderModeSubtitle": "Tutta l'app diventa in scala di grigi, come lo schermo di un e-reader",
+  "advancedFilters": "Filtri avanzati",
+  "advancedFiltersHint": "Per la regolazione rapida mentre leggi, usa gli slider nel pannello filtri del libro.",
+  "pageColorLabel": "Colore pagina (EPUB)",
+  "presetDay": "Giorno",
+  "presetSepia": "Seppia",
+  "presetNight": "Notte",
+  "dyslexiaFont": "Font per dislessia (EPUB)",
+  "paperFilter": "Filtro carta",
+  "blueLightFilter": "Filtro luce blu",
+  "colorOverlay": "Overlay colorato",
+  "none": "Nessuno",
+  "overlayYellow": "Giallo",
+  "overlayGreen": "Verde",
+  "overlayBlue": "Azzurro",
+  "overlayIntensityLabel": "Intensità overlay · {percent}%",
+  "@overlayIntensityLabel": {
+    "placeholders": { "percent": {} }
+  },
+  "language": "Lingua",
+  "languageSystem": "Automatico (sistema)",
+  "languageItalian": "Italiano",
+  "languageEnglish": "English",
+  "languageSpanish": "Español"
+}

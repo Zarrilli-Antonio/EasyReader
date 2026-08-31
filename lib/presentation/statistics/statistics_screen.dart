@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../common/providers.dart';
 
 class StatisticsScreen extends ConsumerWidget {
@@ -8,10 +9,11 @@ class StatisticsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final stats = ref.watch(globalReadingStatsProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Statistiche di lettura')),
+      appBar: AppBar(title: Text(l10n.readingStats)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
@@ -19,7 +21,7 @@ class StatisticsScreen extends ConsumerWidget {
             Expanded(
               child: _StatCard(
                 icon: Icons.menu_book_outlined,
-                label: 'Libri in libreria',
+                label: l10n.booksInLibrary,
                 value: '${stats.totalBooks}',
               ),
             ),
@@ -27,7 +29,7 @@ class StatisticsScreen extends ConsumerWidget {
             Expanded(
               child: _StatCard(
                 icon: Icons.task_alt_outlined,
-                label: 'Completati',
+                label: l10n.completed,
                 value: '${stats.completedBooks}',
               ),
             ),
@@ -35,7 +37,7 @@ class StatisticsScreen extends ConsumerWidget {
             Expanded(
               child: _StatCard(
                 icon: Icons.auto_stories_outlined,
-                label: 'In lettura',
+                label: l10n.inProgress,
                 value: '${stats.inProgressBooks}',
               ),
             ),

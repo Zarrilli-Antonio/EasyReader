@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../common/providers.dart';
 
 /// Barra di avanzamento persistente in fondo al reader, comune a EPUB e PDF
@@ -12,11 +13,17 @@ class ReaderProgressBar extends ConsumerWidget {
   final VoidCallback? onPrevious;
   final VoidCallback? onNext;
 
+  /// Azione opzionale in fondo alla barra (es. lettura vocale per l'EPUB):
+  /// qui, non come pulsante flottante sopra il contenuto, altrimenti su un
+  /// layout paginato rischia di coprire le ultime righe di testo.
+  final Widget? trailing;
+
   const ReaderProgressBar({
     super.key,
     required this.bookId,
     this.onPrevious,
     this.onNext,
+    this.trailing,
   });
 
   @override
@@ -27,7 +34,11 @@ class ReaderProgressBar extends ConsumerWidget {
     // "Pagina X di Y" ha senso solo per i formati a layout fisso (PDF): per
     // l'EPUB il motore di lettura non espone un conteggio pagine reale.
     final label = totalUnits != null
-        ? 'Pagina ${progress!.position} di $totalUnits · ${(percentage * 100).round()}%'
+        ? AppLocalizations.of(context)!.pageProgress(
+            progress!.position,
+            totalUnits,
+            (percentage * 100).round(),
+          )
         : '${(percentage * 100).round()}%';
 
     return Material(
@@ -62,6 +73,7 @@ class ReaderProgressBar extends ConsumerWidget {
                 icon: const Icon(Icons.chevron_right),
                 onPressed: onNext,
               ),
+              ?trailing,
             ],
           ),
         ),

@@ -2,6 +2,8 @@ import 'package:epub_view/epub_view.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart' as html_parser;
 
+import '../../l10n/app_localizations.dart';
+
 /// Ricerca full-text per il motore nativo Windows: `epub_view` non la
 /// fornisce, quindi cerchiamo a mano nel testo semplice di ogni capitolo
 /// (estratto dall'HTML già caricato in memoria) e saltiamo all'inizio del
@@ -63,7 +65,9 @@ class _EpubNativeSearchSheetState extends State<EpubNativeSearchSheet> {
         );
         results.add(
           _ChapterMatch(
-            title: toc[i].title ?? 'Capitolo ${i + 1}',
+            title:
+                toc[i].title ??
+                AppLocalizations.of(context)!.chapterFallback(i + 1),
             excerpt: text.substring(excerptStart, excerptEnd).trim(),
             startIndex: toc[i].startIndex,
           ),
@@ -84,6 +88,7 @@ class _EpubNativeSearchSheetState extends State<EpubNativeSearchSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
@@ -106,18 +111,18 @@ class _EpubNativeSearchSheetState extends State<EpubNativeSearchSheet> {
               controller: _queryController,
               autofocus: true,
               textInputAction: TextInputAction.search,
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.search),
-                hintText: 'Cerca nel libro (per capitolo)…',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search),
+                hintText: l10n.searchInBookByChapterHint,
+                border: const OutlineInputBorder(),
               ),
               onSubmitted: _search,
             ),
             const SizedBox(height: 12),
             if (_results.isEmpty && _queryController.text.isNotEmpty)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child: Text('Nessun risultato'),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Text(l10n.noResults),
               ),
             ConstrainedBox(
               constraints: BoxConstraints(

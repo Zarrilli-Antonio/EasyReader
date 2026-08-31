@@ -7,6 +7,7 @@ import 'package:html/parser.dart' as html_parser;
 import '../../domain/entities/book.dart';
 import '../../domain/entities/filter_profile.dart';
 import '../../domain/entities/reading_progress.dart';
+import '../../l10n/app_localizations.dart';
 import '../common/providers.dart';
 import 'reader_progress_bar.dart';
 
@@ -123,6 +124,7 @@ class _EpubNativeReaderViewState extends ConsumerState<EpubNativeReaderView> {
     if (!_loaded) {
       return const Center(child: CircularProgressIndicator());
     }
+    final l10n = AppLocalizations.of(context)!;
     final profile = widget.profile;
     final textColor =
         ThemeData.estimateBrightnessForColor(profile.backgroundColor) ==
@@ -135,39 +137,29 @@ class _EpubNativeReaderViewState extends ConsumerState<EpubNativeReaderView> {
         Expanded(
           child: Container(
             color: profile.backgroundColor,
-            child: Stack(
-              children: [
-                EpubView(
-                  controller: _controller,
-                  builders: EpubViewBuilders<DefaultBuilderOptions>(
-                    options: DefaultBuilderOptions(
-                      textStyle: TextStyle(
-                        fontSize: profile.fontSize,
-                        height: profile.lineHeight,
-                        color: textColor,
-                        fontFamily: profile.useDyslexiaFont
-                            ? 'OpenDyslexic'
-                            : null,
-                      ),
-                    ),
+            child: EpubView(
+              controller: _controller,
+              builders: EpubViewBuilders<DefaultBuilderOptions>(
+                options: DefaultBuilderOptions(
+                  textStyle: TextStyle(
+                    fontSize: profile.fontSize,
+                    height: profile.lineHeight,
+                    color: textColor,
+                    fontFamily: profile.useDyslexiaFont ? 'OpenDyslexic' : null,
                   ),
                 ),
-                Positioned(
-                  right: 16,
-                  bottom: 16,
-                  child: FloatingActionButton(
-                    tooltip: _isSpeaking
-                        ? 'Interrompi lettura vocale'
-                        : 'Leggi ad alta voce',
-                    onPressed: _toggleReadAloud,
-                    child: Icon(_isSpeaking ? Icons.stop : Icons.volume_up),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),
-        ReaderProgressBar(bookId: widget.book.id),
+        ReaderProgressBar(
+          bookId: widget.book.id,
+          trailing: IconButton(
+            tooltip: _isSpeaking ? l10n.stopReadAloud : l10n.readAloud,
+            icon: Icon(_isSpeaking ? Icons.stop : Icons.volume_up),
+            onPressed: _toggleReadAloud,
+          ),
+        ),
       ],
     );
   }

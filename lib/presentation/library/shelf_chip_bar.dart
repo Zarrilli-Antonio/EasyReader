@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/shelf.dart';
+import '../../l10n/app_localizations.dart';
 import '../common/overlay_utils.dart';
 import '../common/providers.dart';
 import 'shelf_editor_sheet.dart';
@@ -21,6 +22,7 @@ class ShelfChipBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final shelvesAsync = ref.watch(shelvesProvider);
     final shelves = shelvesAsync.valueOrNull ?? const <Shelf>[];
 
@@ -31,7 +33,7 @@ class ShelfChipBar extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
           ChoiceChip(
-            label: const Text('Tutti i libri'),
+            label: Text(l10n.allBooks),
             selected: selectedShelfId == null,
             onSelected: (_) => onSelect(null),
           ),
@@ -52,7 +54,7 @@ class ShelfChipBar extends ConsumerWidget {
           ],
           ActionChip(
             avatar: const Icon(Icons.add, size: 18),
-            label: const Text('Nuova libreria'),
+            label: Text(l10n.newShelf),
             onPressed: () => showShelfEditorSheet(context, ref),
           ),
         ],
@@ -65,6 +67,7 @@ class ShelfChipBar extends ConsumerWidget {
     WidgetRef ref,
     Shelf shelf,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     final action = await showModalBottomSheet<_ShelfAction>(
       context: context,
       builder: (sheetContext) => SafeArea(
@@ -73,7 +76,7 @@ class ShelfChipBar extends ConsumerWidget {
           children: [
             ListTile(
               leading: const Icon(Icons.edit_outlined),
-              title: const Text('Modifica libreria'),
+              title: Text(l10n.editShelf),
               onTap: () => Navigator.of(sheetContext).pop(_ShelfAction.rename),
             ),
             ListTile(
@@ -82,7 +85,7 @@ class ShelfChipBar extends ConsumerWidget {
                 color: Theme.of(sheetContext).colorScheme.error,
               ),
               title: Text(
-                'Elimina libreria',
+                l10n.deleteShelf,
                 style: TextStyle(
                   color: Theme.of(sheetContext).colorScheme.error,
                 ),
@@ -110,21 +113,20 @@ class ShelfChipBar extends ConsumerWidget {
     WidgetRef ref,
     Shelf shelf,
   ) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Eliminare la libreria?'),
-        content: Text(
-          '"${shelf.name}" verrà eliminata. I libri al suo interno restano nella libreria generale, senza essere cancellati.',
-        ),
+        title: Text(l10n.deleteShelfTitle),
+        content: Text(l10n.deleteShelfMessage(shelf.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Annulla'),
+            child: Text(l10n.cancel),
           ),
           FilledButton.tonal(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Elimina'),
+            child: Text(l10n.delete),
           ),
         ],
       ),

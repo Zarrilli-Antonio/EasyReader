@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/book_format.dart';
+import '../../l10n/app_localizations.dart';
 import 'filter_providers.dart';
 
 /// Pannello filtri del lettore: solo slider per la regolazione rapida
@@ -18,6 +19,7 @@ class FilterPanel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final filterAsync = ref.watch(activeFilterProvider);
     final notifier = ref.read(activeFilterProvider.notifier);
 
@@ -42,14 +44,12 @@ class FilterPanel extends ConsumerWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Filtri di lettura',
+                  l10n.readingFilters,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(height: 20),
                 if (bookFormat == BookFormat.epub) ...[
-                  _SectionLabel(
-                    'Dimensione testo · ${profile.fontSize.round()}',
-                  ),
+                  _SectionLabel(l10n.textSizeLabel(profile.fontSize.round())),
                   Slider(
                     value: profile.fontSize,
                     min: 12,
@@ -61,7 +61,7 @@ class FilterPanel extends ConsumerWidget {
                   ),
                   const SizedBox(height: 12),
                   _SectionLabel(
-                    'Interlinea · ${profile.lineHeight.toStringAsFixed(1)}',
+                    l10n.lineHeightLabel(profile.lineHeight.toStringAsFixed(1)),
                   ),
                   Slider(
                     value: profile.lineHeight,
@@ -75,7 +75,7 @@ class FilterPanel extends ConsumerWidget {
                   const SizedBox(height: 12),
                 ],
                 _SectionLabel(
-                  'Luminosità · ${profile.brightness.toStringAsFixed(2)}',
+                  l10n.brightnessLabel(profile.brightness.toStringAsFixed(2)),
                 ),
                 Slider(
                   value: profile.brightness,
@@ -87,7 +87,7 @@ class FilterPanel extends ConsumerWidget {
                 ),
                 const SizedBox(height: 12),
                 _SectionLabel(
-                  'Contrasto · ${profile.contrast.toStringAsFixed(2)}',
+                  l10n.contrastLabel(profile.contrast.toStringAsFixed(2)),
                 ),
                 Slider(
                   value: profile.contrast,
@@ -99,12 +99,13 @@ class FilterPanel extends ConsumerWidget {
                 ),
                 const SizedBox(height: 12),
                 _SectionLabel(
-                  'Temperatura colore · '
-                  '${profile.colorTemperature > 0
-                      ? "caldo"
-                      : profile.colorTemperature < 0
-                      ? "freddo"
-                      : "neutro"}',
+                  l10n.colorTemperatureLabel(
+                    profile.colorTemperature > 0
+                        ? l10n.warm
+                        : profile.colorTemperature < 0
+                        ? l10n.cool
+                        : l10n.neutral,
+                  ),
                 ),
                 Slider(
                   value: profile.colorTemperature,
@@ -122,7 +123,7 @@ class FilterPanel extends ConsumerWidget {
             padding: EdgeInsets.all(32),
             child: Center(child: CircularProgressIndicator()),
           ),
-          error: (error, _) => Text('Errore filtri: $error'),
+          error: (error, _) => Text(l10n.filtersErrorMessage('$error')),
         ),
       ),
     );
