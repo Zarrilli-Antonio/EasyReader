@@ -18,6 +18,7 @@ class FilterProfile {
   final bool paperFilterEnabled;
   final bool blueLightFilterEnabled;
   final bool useDyslexiaFont;
+  final bool eInkModeEnabled;
   final bool isDefault;
 
   const FilterProfile({
@@ -34,6 +35,7 @@ class FilterProfile {
     required this.paperFilterEnabled,
     required this.blueLightFilterEnabled,
     required this.useDyslexiaFont,
+    required this.eInkModeEnabled,
     required this.isDefault,
   });
 
@@ -51,6 +53,7 @@ class FilterProfile {
     paperFilterEnabled: false,
     blueLightFilterEnabled: false,
     useDyslexiaFont: false,
+    eInkModeEnabled: false,
     isDefault: true,
   );
 
@@ -66,6 +69,7 @@ class FilterProfile {
     bool? paperFilterEnabled,
     bool? blueLightFilterEnabled,
     bool? useDyslexiaFont,
+    bool? eInkModeEnabled,
   }) {
     return FilterProfile(
       id: id,
@@ -82,6 +86,7 @@ class FilterProfile {
       blueLightFilterEnabled:
           blueLightFilterEnabled ?? this.blueLightFilterEnabled,
       useDyslexiaFont: useDyslexiaFont ?? this.useDyslexiaFont,
+      eInkModeEnabled: eInkModeEnabled ?? this.eInkModeEnabled,
       isDefault: isDefault,
     );
   }

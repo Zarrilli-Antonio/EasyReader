@@ -1032,6 +1032,21 @@ class $FilterProfilesTable extends FilterProfiles
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _eInkModeEnabledMeta = const VerificationMeta(
+    'eInkModeEnabled',
+  );
+  @override
+  late final GeneratedColumn<bool> eInkModeEnabled = GeneratedColumn<bool>(
+    'e_ink_mode_enabled',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("e_ink_mode_enabled" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _isDefaultMeta = const VerificationMeta(
     'isDefault',
   );
@@ -1062,6 +1077,7 @@ class $FilterProfilesTable extends FilterProfiles
     paperFilterEnabled,
     blueLightFilterEnabled,
     useDyslexiaFont,
+    eInkModeEnabled,
     isDefault,
   ];
   @override
@@ -1180,6 +1196,15 @@ class $FilterProfilesTable extends FilterProfiles
         ),
       );
     }
+    if (data.containsKey('e_ink_mode_enabled')) {
+      context.handle(
+        _eInkModeEnabledMeta,
+        eInkModeEnabled.isAcceptableOrUnknown(
+          data['e_ink_mode_enabled']!,
+          _eInkModeEnabledMeta,
+        ),
+      );
+    }
     if (data.containsKey('is_default')) {
       context.handle(
         _isDefaultMeta,
@@ -1247,6 +1272,10 @@ class $FilterProfilesTable extends FilterProfiles
         DriftSqlType.bool,
         data['${effectivePrefix}use_dyslexia_font'],
       )!,
+      eInkModeEnabled: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}e_ink_mode_enabled'],
+      )!,
       isDefault: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_default'],
@@ -1275,6 +1304,7 @@ class FilterProfileRow extends DataClass
   final bool paperFilterEnabled;
   final bool blueLightFilterEnabled;
   final bool useDyslexiaFont;
+  final bool eInkModeEnabled;
   final bool isDefault;
   const FilterProfileRow({
     required this.id,
@@ -1290,6 +1320,7 @@ class FilterProfileRow extends DataClass
     required this.paperFilterEnabled,
     required this.blueLightFilterEnabled,
     required this.useDyslexiaFont,
+    required this.eInkModeEnabled,
     required this.isDefault,
   });
   @override
@@ -1308,6 +1339,7 @@ class FilterProfileRow extends DataClass
     map['paper_filter_enabled'] = Variable<bool>(paperFilterEnabled);
     map['blue_light_filter_enabled'] = Variable<bool>(blueLightFilterEnabled);
     map['use_dyslexia_font'] = Variable<bool>(useDyslexiaFont);
+    map['e_ink_mode_enabled'] = Variable<bool>(eInkModeEnabled);
     map['is_default'] = Variable<bool>(isDefault);
     return map;
   }
@@ -1327,6 +1359,7 @@ class FilterProfileRow extends DataClass
       paperFilterEnabled: Value(paperFilterEnabled),
       blueLightFilterEnabled: Value(blueLightFilterEnabled),
       useDyslexiaFont: Value(useDyslexiaFont),
+      eInkModeEnabled: Value(eInkModeEnabled),
       isDefault: Value(isDefault),
     );
   }
@@ -1352,6 +1385,7 @@ class FilterProfileRow extends DataClass
         json['blueLightFilterEnabled'],
       ),
       useDyslexiaFont: serializer.fromJson<bool>(json['useDyslexiaFont']),
+      eInkModeEnabled: serializer.fromJson<bool>(json['eInkModeEnabled']),
       isDefault: serializer.fromJson<bool>(json['isDefault']),
     );
   }
@@ -1372,6 +1406,7 @@ class FilterProfileRow extends DataClass
       'paperFilterEnabled': serializer.toJson<bool>(paperFilterEnabled),
       'blueLightFilterEnabled': serializer.toJson<bool>(blueLightFilterEnabled),
       'useDyslexiaFont': serializer.toJson<bool>(useDyslexiaFont),
+      'eInkModeEnabled': serializer.toJson<bool>(eInkModeEnabled),
       'isDefault': serializer.toJson<bool>(isDefault),
     };
   }
@@ -1390,6 +1425,7 @@ class FilterProfileRow extends DataClass
     bool? paperFilterEnabled,
     bool? blueLightFilterEnabled,
     bool? useDyslexiaFont,
+    bool? eInkModeEnabled,
     bool? isDefault,
   }) => FilterProfileRow(
     id: id ?? this.id,
@@ -1406,6 +1442,7 @@ class FilterProfileRow extends DataClass
     blueLightFilterEnabled:
         blueLightFilterEnabled ?? this.blueLightFilterEnabled,
     useDyslexiaFont: useDyslexiaFont ?? this.useDyslexiaFont,
+    eInkModeEnabled: eInkModeEnabled ?? this.eInkModeEnabled,
     isDefault: isDefault ?? this.isDefault,
   );
   FilterProfileRow copyWithCompanion(FilterProfilesCompanion data) {
@@ -1441,6 +1478,9 @@ class FilterProfileRow extends DataClass
       useDyslexiaFont: data.useDyslexiaFont.present
           ? data.useDyslexiaFont.value
           : this.useDyslexiaFont,
+      eInkModeEnabled: data.eInkModeEnabled.present
+          ? data.eInkModeEnabled.value
+          : this.eInkModeEnabled,
       isDefault: data.isDefault.present ? data.isDefault.value : this.isDefault,
     );
   }
@@ -1461,6 +1501,7 @@ class FilterProfileRow extends DataClass
           ..write('paperFilterEnabled: $paperFilterEnabled, ')
           ..write('blueLightFilterEnabled: $blueLightFilterEnabled, ')
           ..write('useDyslexiaFont: $useDyslexiaFont, ')
+          ..write('eInkModeEnabled: $eInkModeEnabled, ')
           ..write('isDefault: $isDefault')
           ..write(')'))
         .toString();
@@ -1481,6 +1522,7 @@ class FilterProfileRow extends DataClass
     paperFilterEnabled,
     blueLightFilterEnabled,
     useDyslexiaFont,
+    eInkModeEnabled,
     isDefault,
   );
   @override
@@ -1500,6 +1542,7 @@ class FilterProfileRow extends DataClass
           other.paperFilterEnabled == this.paperFilterEnabled &&
           other.blueLightFilterEnabled == this.blueLightFilterEnabled &&
           other.useDyslexiaFont == this.useDyslexiaFont &&
+          other.eInkModeEnabled == this.eInkModeEnabled &&
           other.isDefault == this.isDefault);
 }
 
@@ -1517,6 +1560,7 @@ class FilterProfilesCompanion extends UpdateCompanion<FilterProfileRow> {
   final Value<bool> paperFilterEnabled;
   final Value<bool> blueLightFilterEnabled;
   final Value<bool> useDyslexiaFont;
+  final Value<bool> eInkModeEnabled;
   final Value<bool> isDefault;
   final Value<int> rowid;
   const FilterProfilesCompanion({
@@ -1533,6 +1577,7 @@ class FilterProfilesCompanion extends UpdateCompanion<FilterProfileRow> {
     this.paperFilterEnabled = const Value.absent(),
     this.blueLightFilterEnabled = const Value.absent(),
     this.useDyslexiaFont = const Value.absent(),
+    this.eInkModeEnabled = const Value.absent(),
     this.isDefault = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -1550,6 +1595,7 @@ class FilterProfilesCompanion extends UpdateCompanion<FilterProfileRow> {
     this.paperFilterEnabled = const Value.absent(),
     this.blueLightFilterEnabled = const Value.absent(),
     this.useDyslexiaFont = const Value.absent(),
+    this.eInkModeEnabled = const Value.absent(),
     this.isDefault = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -1570,6 +1616,7 @@ class FilterProfilesCompanion extends UpdateCompanion<FilterProfileRow> {
     Expression<bool>? paperFilterEnabled,
     Expression<bool>? blueLightFilterEnabled,
     Expression<bool>? useDyslexiaFont,
+    Expression<bool>? eInkModeEnabled,
     Expression<bool>? isDefault,
     Expression<int>? rowid,
   }) {
@@ -1589,6 +1636,7 @@ class FilterProfilesCompanion extends UpdateCompanion<FilterProfileRow> {
       if (blueLightFilterEnabled != null)
         'blue_light_filter_enabled': blueLightFilterEnabled,
       if (useDyslexiaFont != null) 'use_dyslexia_font': useDyslexiaFont,
+      if (eInkModeEnabled != null) 'e_ink_mode_enabled': eInkModeEnabled,
       if (isDefault != null) 'is_default': isDefault,
       if (rowid != null) 'rowid': rowid,
     });
@@ -1608,6 +1656,7 @@ class FilterProfilesCompanion extends UpdateCompanion<FilterProfileRow> {
     Value<bool>? paperFilterEnabled,
     Value<bool>? blueLightFilterEnabled,
     Value<bool>? useDyslexiaFont,
+    Value<bool>? eInkModeEnabled,
     Value<bool>? isDefault,
     Value<int>? rowid,
   }) {
@@ -1626,6 +1675,7 @@ class FilterProfilesCompanion extends UpdateCompanion<FilterProfileRow> {
       blueLightFilterEnabled:
           blueLightFilterEnabled ?? this.blueLightFilterEnabled,
       useDyslexiaFont: useDyslexiaFont ?? this.useDyslexiaFont,
+      eInkModeEnabled: eInkModeEnabled ?? this.eInkModeEnabled,
       isDefault: isDefault ?? this.isDefault,
       rowid: rowid ?? this.rowid,
     );
@@ -1675,6 +1725,9 @@ class FilterProfilesCompanion extends UpdateCompanion<FilterProfileRow> {
     if (useDyslexiaFont.present) {
       map['use_dyslexia_font'] = Variable<bool>(useDyslexiaFont.value);
     }
+    if (eInkModeEnabled.present) {
+      map['e_ink_mode_enabled'] = Variable<bool>(eInkModeEnabled.value);
+    }
     if (isDefault.present) {
       map['is_default'] = Variable<bool>(isDefault.value);
     }
@@ -1700,6 +1753,7 @@ class FilterProfilesCompanion extends UpdateCompanion<FilterProfileRow> {
           ..write('paperFilterEnabled: $paperFilterEnabled, ')
           ..write('blueLightFilterEnabled: $blueLightFilterEnabled, ')
           ..write('useDyslexiaFont: $useDyslexiaFont, ')
+          ..write('eInkModeEnabled: $eInkModeEnabled, ')
           ..write('isDefault: $isDefault, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -2889,6 +2943,7 @@ typedef $$FilterProfilesTableCreateCompanionBuilder =
       Value<bool> paperFilterEnabled,
       Value<bool> blueLightFilterEnabled,
       Value<bool> useDyslexiaFont,
+      Value<bool> eInkModeEnabled,
       Value<bool> isDefault,
       Value<int> rowid,
     });
@@ -2907,6 +2962,7 @@ typedef $$FilterProfilesTableUpdateCompanionBuilder =
       Value<bool> paperFilterEnabled,
       Value<bool> blueLightFilterEnabled,
       Value<bool> useDyslexiaFont,
+      Value<bool> eInkModeEnabled,
       Value<bool> isDefault,
       Value<int> rowid,
     });
@@ -2982,6 +3038,11 @@ class $$FilterProfilesTableFilterComposer
 
   ColumnFilters<bool> get useDyslexiaFont => $composableBuilder(
     column: $table.useDyslexiaFont,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get eInkModeEnabled => $composableBuilder(
+    column: $table.eInkModeEnabled,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3065,6 +3126,11 @@ class $$FilterProfilesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get eInkModeEnabled => $composableBuilder(
+    column: $table.eInkModeEnabled,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isDefault => $composableBuilder(
     column: $table.isDefault,
     builder: (column) => ColumnOrderings(column),
@@ -3137,6 +3203,11 @@ class $$FilterProfilesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<bool> get eInkModeEnabled => $composableBuilder(
+    column: $table.eInkModeEnabled,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<bool> get isDefault =>
       $composableBuilder(column: $table.isDefault, builder: (column) => column);
 }
@@ -3191,6 +3262,7 @@ class $$FilterProfilesTableTableManager
                 Value<bool> paperFilterEnabled = const Value.absent(),
                 Value<bool> blueLightFilterEnabled = const Value.absent(),
                 Value<bool> useDyslexiaFont = const Value.absent(),
+                Value<bool> eInkModeEnabled = const Value.absent(),
                 Value<bool> isDefault = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => FilterProfilesCompanion(
@@ -3207,6 +3279,7 @@ class $$FilterProfilesTableTableManager
                 paperFilterEnabled: paperFilterEnabled,
                 blueLightFilterEnabled: blueLightFilterEnabled,
                 useDyslexiaFont: useDyslexiaFont,
+                eInkModeEnabled: eInkModeEnabled,
                 isDefault: isDefault,
                 rowid: rowid,
               ),
@@ -3225,6 +3298,7 @@ class $$FilterProfilesTableTableManager
                 Value<bool> paperFilterEnabled = const Value.absent(),
                 Value<bool> blueLightFilterEnabled = const Value.absent(),
                 Value<bool> useDyslexiaFont = const Value.absent(),
+                Value<bool> eInkModeEnabled = const Value.absent(),
                 Value<bool> isDefault = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => FilterProfilesCompanion.insert(
@@ -3241,6 +3315,7 @@ class $$FilterProfilesTableTableManager
                 paperFilterEnabled: paperFilterEnabled,
                 blueLightFilterEnabled: blueLightFilterEnabled,
                 useDyslexiaFont: useDyslexiaFont,
+                eInkModeEnabled: eInkModeEnabled,
                 isDefault: isDefault,
                 rowid: rowid,
               ),

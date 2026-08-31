@@ -42,6 +42,7 @@ class DriftFilterProfileRepository implements FilterProfileRepository {
             paperFilterEnabled: Value(profile.paperFilterEnabled),
             blueLightFilterEnabled: Value(profile.blueLightFilterEnabled),
             useDyslexiaFont: Value(profile.useDyslexiaFont),
+            eInkModeEnabled: Value(profile.eInkModeEnabled),
             isDefault: const Value(true),
           ),
         );
@@ -61,6 +62,7 @@ class DriftFilterProfileRepository implements FilterProfileRepository {
     paperFilterEnabled: row.paperFilterEnabled,
     blueLightFilterEnabled: row.blueLightFilterEnabled,
     useDyslexiaFont: row.useDyslexiaFont,
+    eInkModeEnabled: row.eInkModeEnabled,
     isDefault: row.isDefault,
   );
 }

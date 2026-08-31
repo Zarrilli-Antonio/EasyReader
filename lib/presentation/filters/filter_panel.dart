@@ -4,26 +4,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/book_format.dart';
 import 'filter_providers.dart';
 
-/// Pannello filtri: colore pagina, dimensione testo e interlinea (solo
-/// EPUB, richiedono reflow), overlay colorato, filtro carta, luminosità,
-/// contrasto e temperatura colore (universali, EPUB e PDF). Ogni slider
+/// Pannello filtri del lettore: solo slider per la regolazione rapida
+/// mentre si legge — dimensione testo e interlinea (solo EPUB, richiedono
+/// reflow), luminosità, contrasto e temperatura colore (universali, EPUB e
+/// PDF). I filtri "da impostare una volta" (colore pagina, filtro carta,
+/// filtro luce blu, overlay colorato, font per dislessia, modalità
+/// e-reader) vivono nelle Impostazioni globali, non qui. Ogni slider
 /// aggiorna subito l'anteprima e salva solo al rilascio del gesto.
 class FilterPanel extends ConsumerWidget {
   final BookFormat bookFormat;
 
   const FilterPanel({super.key, required this.bookFormat});
-
-  static const _backgroundPresets = <String, Color>{
-    'Giorno': Colors.white,
-    'Seppia': Color(0xFFECDCB8),
-    'Notte': Color(0xFF14161A),
-  };
-
-  static const _overlayPresets = <String, Color>{
-    'Giallo': Color(0xFFFFF176),
-    'Verde': Color(0xFFAED581),
-    'Azzurro': Color(0xFF81D4FA),
-  };
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,25 +47,6 @@ class FilterPanel extends ConsumerWidget {
                 ),
                 const SizedBox(height: 20),
                 if (bookFormat == BookFormat.epub) ...[
-                  const _SectionLabel('Colore pagina'),
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8,
-                    children: _backgroundPresets.entries.map((entry) {
-                      final selected = profile.backgroundColor == entry.value;
-                      return ChoiceChip(
-                        label: Text(entry.key),
-                        selected: selected,
-                        onSelected: (_) {
-                          notifier.preview(
-                            (p) => p.copyWith(backgroundColor: entry.value),
-                          );
-                          notifier.commit();
-                        },
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(height: 20),
                   _SectionLabel(
                     'Dimensione testo · ${profile.fontSize.round()}',
                   ),
@@ -101,106 +73,7 @@ class FilterPanel extends ConsumerWidget {
                     onChangeEnd: (_) => notifier.commit(),
                   ),
                   const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const _SectionLabel('Font per dislessia'),
-                      Switch(
-                        value: profile.useDyslexiaFont,
-                        onChanged: (value) {
-                          notifier.preview(
-                            (p) => p.copyWith(useDyslexiaFont: value),
-                          );
-                          notifier.commit();
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
                 ],
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const _SectionLabel('Filtro carta'),
-                    Switch(
-                      value: profile.paperFilterEnabled,
-                      onChanged: (value) {
-                        notifier.preview(
-                          (p) => p.copyWith(paperFilterEnabled: value),
-                        );
-                        notifier.commit();
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const _SectionLabel('Filtro luce blu'),
-                    Switch(
-                      value: profile.blueLightFilterEnabled,
-                      onChanged: (value) {
-                        notifier.preview(
-                          (p) => p.copyWith(blueLightFilterEnabled: value),
-                        );
-                        notifier.commit();
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                const _SectionLabel('Overlay colorato'),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8,
-                  children: [
-                    ChoiceChip(
-                      label: const Text('Nessuno'),
-                      selected: profile.overlayOpacity == 0,
-                      onSelected: (_) {
-                        notifier.preview((p) => p.copyWith(overlayOpacity: 0));
-                        notifier.commit();
-                      },
-                    ),
-                    ..._overlayPresets.entries.map((entry) {
-                      final selected =
-                          profile.overlayColor == entry.value &&
-                          profile.overlayOpacity > 0;
-                      return ChoiceChip(
-                        label: Text(entry.key),
-                        selected: selected,
-                        onSelected: (_) {
-                          notifier.preview(
-                            (p) => p.copyWith(
-                              overlayColor: entry.value,
-                              overlayOpacity: p.overlayOpacity > 0
-                                  ? p.overlayOpacity
-                                  : 0.15,
-                            ),
-                          );
-                          notifier.commit();
-                        },
-                      );
-                    }),
-                  ],
-                ),
-                if (profile.overlayOpacity > 0) ...[
-                  const SizedBox(height: 12),
-                  _SectionLabel(
-                    'Intensità overlay · ${(profile.overlayOpacity * 100).round()}%',
-                  ),
-                  Slider(
-                    value: profile.overlayOpacity,
-                    min: 0.05,
-                    max: 0.5,
-                    onChanged: (value) => notifier.preview(
-                      (p) => p.copyWith(overlayOpacity: value),
-                    ),
-                    onChangeEnd: (_) => notifier.commit(),
-                  ),
-                ],
-                const SizedBox(height: 12),
                 _SectionLabel(
                   'Luminosità · ${profile.brightness.toStringAsFixed(2)}',
                 ),

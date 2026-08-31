@@ -36,6 +36,8 @@ class FilterProfiles extends Table {
       boolean().withDefault(const Constant(false))();
   BoolColumn get useDyslexiaFont =>
       boolean().withDefault(const Constant(false))();
+  BoolColumn get eInkModeEnabled =>
+      boolean().withDefault(const Constant(false))();
   BoolColumn get isDefault => boolean().withDefault(const Constant(false))();
 
   @override
@@ -72,7 +74,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 9;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -113,6 +115,9 @@ class AppDatabase extends _$AppDatabase {
           filterProfiles.blueLightFilterEnabled,
         );
         await m.addColumn(filterProfiles, filterProfiles.useDyslexiaFont);
+      }
+      if (from < 9) {
+        await m.addColumn(filterProfiles, filterProfiles.eInkModeEnabled);
       }
     },
   );

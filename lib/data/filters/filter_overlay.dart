@@ -44,10 +44,11 @@ class FilterOverlay extends StatelessWidget {
     );
   }
 
-  /// Combina luminosità, contrasto, temperatura colore e filtro luce blu in
-  /// un'unica matrice, così tutti gli effetti si applicano insieme in un
-  /// solo passaggio invece di annidare più `ColorFiltered` (più costoso e
-  /// con un ordine di composizione meno prevedibile).
+  /// Combina luminosità, contrasto, temperatura colore, filtro luce blu e
+  /// modalità e-reader in un'unica matrice, così tutti gli effetti si
+  /// applicano insieme in un solo passaggio invece di annidare più
+  /// `ColorFiltered` (più costoso e con un ordine di composizione meno
+  /// prevedibile).
   ///
   /// - luminosità: -1 (più scuro) .. 1 (più chiaro), 0 = nessun effetto
   /// - contrasto: 0.5 (basso) .. 1.8 (alto), 1 = nessun effetto
@@ -55,6 +56,10 @@ class FilterOverlay extends StatelessWidget {
   /// - filtro luce blu: se attivo, riduce anche la trasmissione del canale
   ///   blu (non solo un'aggiunta di ambra come la temperatura), lo stesso
   ///   principio usato dai filtri per la luce blu serale
+  /// - modalità e-reader: desatura in scala di grigi (pesi di luminanza
+  ///   standard) prima di applicare contrasto/luminosità/temperatura, per
+  ///   avvicinarsi al pannello monocromatico di un e-reader invece che a
+  ///   uno schermo LCD/OLED a colori
   List<double> _buildColorMatrix(FilterProfile profile) {
     final brightnessOffset = profile.brightness.clamp(-1.0, 1.0) * 255;
     final contrastFactor = profile.contrast.clamp(0.5, 1.8);
@@ -66,10 +71,26 @@ class FilterOverlay extends StatelessWidget {
     final greenOffset = contrastOffset + brightnessOffset;
     final blueOffset = contrastOffset + brightnessOffset - warmOffset;
 
+    final redFactor = contrastFactor;
+    final greenFactor = contrastFactor;
+    final blueFactor = contrastFactor * blueLightFactor;
+
+    if (!profile.eInkModeEnabled) {
+      return <double>[
+        redFactor, 0, 0, 0, redOffset, //
+        0, greenFactor, 0, 0, greenOffset, //
+        0, 0, blueFactor, 0, blueOffset, //
+        0, 0, 0, 1, 0, //
+      ];
+    }
+
+    const lumR = 0.299, lumG = 0.587, lumB = 0.114;
     return <double>[
-      contrastFactor, 0, 0, 0, redOffset, //
-      0, contrastFactor, 0, 0, greenOffset, //
-      0, 0, contrastFactor * blueLightFactor, 0, blueOffset, //
+      redFactor * lumR, redFactor * lumG, redFactor * lumB, 0, redOffset, //
+      greenFactor * lumR, greenFactor * lumG, greenFactor * lumB, 0,
+      greenOffset, //
+      blueFactor * lumR, blueFactor * lumG, blueFactor * lumB, 0,
+      blueOffset, //
       0, 0, 0, 1, 0, //
     ];
   }

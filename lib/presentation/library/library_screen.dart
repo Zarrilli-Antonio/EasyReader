@@ -12,6 +12,7 @@ import '../../domain/entities/shelf.dart';
 import '../common/overlay_utils.dart';
 import '../common/providers.dart';
 import '../reader/reader_screen.dart';
+import '../settings/settings_screen.dart';
 import '../statistics/statistics_screen.dart';
 import 'book_stats_sheet.dart';
 import 'rename_book_sheet.dart';
@@ -128,6 +129,13 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
             onPressed: () => Navigator.of(
               context,
             ).push(MaterialPageRoute(builder: (_) => const StatisticsScreen())),
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            tooltip: 'Impostazioni',
+            onPressed: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (_) => const SettingsScreen())),
           ),
         ],
       ),
