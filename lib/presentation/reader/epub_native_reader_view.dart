@@ -47,20 +47,35 @@ class _EpubNativeReaderViewState extends ConsumerState<EpubNativeReaderView> {
   final _tts = FlutterTts();
   bool _isSpeaking = false;
   bool _loaded = false;
+  bool _hasError = false;
 
   @override
   void initState() {
     super.initState();
     _tts.awaitSpeakCompletion(true);
     _controller.isBookLoaded.addListener(_onLoadStateChanged);
+    // `isBookLoaded` resta `false` anche in caso di errore di parsing (vedi
+    // `EpubController._loadDocument` nel package), quindi senza ascoltare
+    // anche `loadingState` un fallimento lascerebbe lo spinner per sempre.
+    _controller.loadingState.addListener(_onLoadingStateChanged);
     _controller.currentValueListenable.addListener(_saveProgress);
   }
 
   @override
   void dispose() {
+    // Il plugin nativo Windows di `flutter_tts` chiama `speakResult->Success(1)`
+    // dentro `stop()` quando `awaitSpeakCompletion` è true (impostato in
+    // `initState`) — ma `speakResult` viene assegnato solo dentro `speak()`.
+    // Se non si è mai usata la lettura vocale, quel puntatore è ancora nullo:
+    // chiamare `stop()` qui incondizionatamente causa un crash nativo (non
+    // intercettabile da Dart) ogni volta che si esce dal lettore EPUB senza
+    // aver mai premuto "leggi ad alta voce".
+    if (_isSpeaking) {
+      _tts.stop();
+    }
     _isSpeaking = false;
-    _tts.stop();
     _controller.isBookLoaded.removeListener(_onLoadStateChanged);
+    _controller.loadingState.removeListener(_onLoadingStateChanged);
     _controller.currentValueListenable.removeListener(_saveProgress);
     super.dispose();
   }
@@ -69,6 +84,12 @@ class _EpubNativeReaderViewState extends ConsumerState<EpubNativeReaderView> {
     if (!_controller.isBookLoaded.value || _loaded) return;
     _loaded = true;
     widget.onLoaded?.call();
+    if (mounted) setState(() {});
+  }
+
+  void _onLoadingStateChanged() {
+    if (_controller.loadingState.value != EpubViewLoadingState.error) return;
+    _hasError = true;
     if (mounted) setState(() {});
   }
 
@@ -121,9 +142,6 @@ class _EpubNativeReaderViewState extends ConsumerState<EpubNativeReaderView> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_loaded) {
-      return const Center(child: CircularProgressIndicator());
-    }
     final l10n = AppLocalizations.of(context)!;
     final profile = widget.profile;
     final textColor =
@@ -132,23 +150,35 @@ class _EpubNativeReaderViewState extends ConsumerState<EpubNativeReaderView> {
         ? Colors.white
         : Colors.black;
 
+    // `EpubView` va sempre montato: è il suo `initState` ad agganciare il
+    // controller e avviare il parsing del libro. Nasconderlo finché
+    // `_loaded` è false (come si faceva prima) crea uno stallo, perché quel
+    // caricamento non parte mai senza il widget montato.
     return Column(
       children: [
         Expanded(
           child: Container(
             color: profile.backgroundColor,
-            child: EpubView(
-              controller: _controller,
-              builders: EpubViewBuilders<DefaultBuilderOptions>(
-                options: DefaultBuilderOptions(
-                  textStyle: TextStyle(
-                    fontSize: profile.fontSize,
-                    height: profile.lineHeight,
-                    color: textColor,
-                    fontFamily: profile.useDyslexiaFont ? 'OpenDyslexic' : null,
+            child: Stack(
+              children: [
+                EpubView(
+                  controller: _controller,
+                  builders: EpubViewBuilders<DefaultBuilderOptions>(
+                    options: DefaultBuilderOptions(
+                      textStyle: TextStyle(
+                        fontSize: profile.fontSize,
+                        height: profile.lineHeight,
+                        color: textColor,
+                        fontFamily: profile.useDyslexiaFont
+                            ? 'OpenDyslexic'
+                            : null,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                if (!_loaded && !_hasError)
+                  const Center(child: CircularProgressIndicator()),
+              ],
             ),
           ),
         ),
@@ -157,7 +187,7 @@ class _EpubNativeReaderViewState extends ConsumerState<EpubNativeReaderView> {
           trailing: IconButton(
             tooltip: _isSpeaking ? l10n.stopReadAloud : l10n.readAloud,
             icon: Icon(_isSpeaking ? Icons.stop : Icons.volume_up),
-            onPressed: _toggleReadAloud,
+            onPressed: _loaded ? _toggleReadAloud : null,
           ),
         ),
       ],

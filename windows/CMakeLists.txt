@@ -53,10 +53,30 @@ add_subdirectory(${FLUTTER_MANAGED_DIR})
 add_subdirectory("runner")
 
 
+# `pdfx` e `syncfusion_pdfviewer_windows` cercano entrambi la propria
+# pdfium.dll con `find_file(PDFium_LIBRARY ...)` — la stessa variabile di
+# cache CMake, che ha ambito globale sull'intero progetto. Chi viene
+# processato per primo da `generated_plugins.cmake` (l'ordine è alfabetico:
+# pdfx prima di syncfusion) "vince" la cache; l'altro la eredita in silenzio,
+# perché `find_file` non ricerca se la variabile è già valorizzata. Il
+# risultato: il visualizzatore Syncfusion — la lettura vera e propria — finiva
+# per linkare e imbarcare la pdfium.dll scaricata da pdfx (usata solo per le
+# miniature di copertina), un build diverso e con ABI incompatibile, causa di
+# crash nativi non intercettabili da Dart all'apertura di un PDF.
+# La si preimposta qui, prima che `generated_plugins.cmake` tocchi i due
+# plugin, così `find_file` la lascia stare per entrambi e vince sempre la
+# pdfium.dll di Syncfusion — quella di pdfx resta linkata ma inutilizzata,
+# perché la relativa estrazione copertina è disattivata su Windows in
+# cover_extractor.dart.
+set(_syncfusion_pdfium_dir
+  "${CMAKE_CURRENT_SOURCE_DIR}/flutter/ephemeral/.plugin_symlinks/syncfusion_pdfviewer_windows/windows/include/pdfium")
+set(PDFium_INCLUDE_DIR "${_syncfusion_pdfium_dir}" CACHE PATH "" FORCE)
+set(PDFium_LIBRARY "${_syncfusion_pdfium_dir}/x64/bin/pdfium.dll" CACHE FILEPATH "" FORCE)
+set(PDFium_IMPLIB "${_syncfusion_pdfium_dir}/x64/lib/pdfium.dll.lib" CACHE FILEPATH "" FORCE)
+
 # Generated plugin build rules, which manage building the plugins and adding
 # them to the application.
 include(flutter/generated_plugins.cmake)
-
 
 # === Installation ===
 # Support files are copied into place next to the executable, so that it can

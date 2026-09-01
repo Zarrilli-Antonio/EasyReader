@@ -168,6 +168,13 @@ class ArchiveCoverExtractor implements CoverExtractor {
     String bookId,
     String coversDirPath,
   ) async {
+    // Su Windows la pdfium.dll di pdfx viene esclusa dalla build (vedi
+    // windows/CMakeLists.txt) per non entrare in conflitto con quella, ABI-
+    // incompatibile, di syncfusion_flutter_pdfviewer usata per la lettura:
+    // chiamare comunque pdfx qui caricherebbe la pdfium.dll sbagliata e
+    // manderebbe in crash nativo l'app (non intercettabile da questo try/
+    // catch). Niente copertina per i PDF su Windows, meglio che un crash.
+    if (Platform.isWindows) return null;
     final document = await pdfx.PdfDocument.openFile(sourceFilePath);
     try {
       final page = await document.getPage(1);

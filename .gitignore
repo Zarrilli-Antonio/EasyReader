@@ -43,3 +43,10 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Installer Windows generato da windows/installer/easy_reader.iss
+/dist/
+
+# File spurio creato da qualche comando Windows che ha ridiretto l'output a
+# "nul" invece che al device nullo (capita in Git Bash/PowerShell)
+nul

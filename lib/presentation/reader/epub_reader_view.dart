@@ -63,8 +63,14 @@ class _EpubReaderViewState extends ConsumerState<EpubReaderView> {
 
   @override
   void dispose() {
+    // Vedi la nota in `EpubNativeReaderView.dispose`: alcuni backend nativi
+    // di `flutter_tts` gestiscono male uno `stop()` chiamato senza un
+    // precedente `speak()` quando `awaitSpeakCompletion` è true. Si chiama
+    // solo se la lettura vocale è stata effettivamente avviata.
+    if (_isSpeaking) {
+      _tts.stop();
+    }
     _isSpeaking = false;
-    _tts.stop();
     super.dispose();
   }
 
