@@ -141,6 +141,11 @@ class _OnlineSearchScreenState extends ConsumerState<OnlineSearchScreen> {
         throw HttpException('${response.statusCode}');
       }
       final tempDir = await getTemporaryDirectory();
+      // Su macOS questa cartella non esiste ancora finché non ci scrive
+      // qualcun altro: writeAsBytes non la crea da sola, va fatto esplicitamente.
+      if (!await tempDir.exists()) {
+        await tempDir.create(recursive: true);
+      }
       // Non tutte le fonti restituiscono un URL con estensione nel path (es.
       // Wikisource, che passa il formato come query param): se manca si usa
       // il tipo di file richiesto, o EPUB come miglior default con "any".
