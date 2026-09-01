@@ -615,6 +615,156 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Español'**
   String get languageSpanish;
+
+  /// No description provided for @languageFrench.
+  ///
+  /// In it, this message translates to:
+  /// **'Français'**
+  String get languageFrench;
+
+  /// No description provided for @languageGerman.
+  ///
+  /// In it, this message translates to:
+  /// **'Deutsch'**
+  String get languageGerman;
+
+  /// No description provided for @discoverBooks.
+  ///
+  /// In it, this message translates to:
+  /// **'Scopri libri online'**
+  String get discoverBooks;
+
+  /// No description provided for @discoverBooksSourceLabel.
+  ///
+  /// In it, this message translates to:
+  /// **'Project Gutenberg e Standard Ebooks via Internet Archive, più Wikisource in italiano — pubblico dominio'**
+  String get discoverBooksSourceLabel;
+
+  /// No description provided for @discoverBooksSourceFilterLabel.
+  ///
+  /// In it, this message translates to:
+  /// **'Fonte'**
+  String get discoverBooksSourceFilterLabel;
+
+  /// No description provided for @discoverBooksSourceFilterAny.
+  ///
+  /// In it, this message translates to:
+  /// **'Tutte'**
+  String get discoverBooksSourceFilterAny;
+
+  /// No description provided for @discoverBooksUnlockedMessage.
+  ///
+  /// In it, this message translates to:
+  /// **'Sezione \"Scopri libri online\" sbloccata'**
+  String get discoverBooksUnlockedMessage;
+
+  /// No description provided for @discoverBooksHiddenMessage.
+  ///
+  /// In it, this message translates to:
+  /// **'Sezione \"Scopri libri online\" nascosta di nuovo'**
+  String get discoverBooksHiddenMessage;
+
+  /// No description provided for @discoverBooksSearchHint.
+  ///
+  /// In it, this message translates to:
+  /// **'Cerca per titolo o autore…'**
+  String get discoverBooksSearchHint;
+
+  /// No description provided for @discoverBooksEmptyHint.
+  ///
+  /// In it, this message translates to:
+  /// **'Cerca un titolo o un autore per trovare libri di pubblico dominio da scaricare.'**
+  String get discoverBooksEmptyHint;
+
+  /// No description provided for @discoverBooksNoResults.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessun libro trovato'**
+  String get discoverBooksNoResults;
+
+  /// No description provided for @discoverBooksLoadMore.
+  ///
+  /// In it, this message translates to:
+  /// **'Carica altri risultati'**
+  String get discoverBooksLoadMore;
+
+  /// No description provided for @discoverBooksSearchButton.
+  ///
+  /// In it, this message translates to:
+  /// **'Cerca'**
+  String get discoverBooksSearchButton;
+
+  /// No description provided for @discoverBooksFilters.
+  ///
+  /// In it, this message translates to:
+  /// **'Filtri'**
+  String get discoverBooksFilters;
+
+  /// No description provided for @discoverBooksLanguageLabel.
+  ///
+  /// In it, this message translates to:
+  /// **'Lingua'**
+  String get discoverBooksLanguageLabel;
+
+  /// No description provided for @discoverBooksLanguageAny.
+  ///
+  /// In it, this message translates to:
+  /// **'Tutte le lingue'**
+  String get discoverBooksLanguageAny;
+
+  /// No description provided for @discoverBooksSubjectLabel.
+  ///
+  /// In it, this message translates to:
+  /// **'Genere'**
+  String get discoverBooksSubjectLabel;
+
+  /// No description provided for @discoverBooksSubjectHint.
+  ///
+  /// In it, this message translates to:
+  /// **'es. poesia, avventura…'**
+  String get discoverBooksSubjectHint;
+
+  /// No description provided for @discoverBooksFileTypeLabel.
+  ///
+  /// In it, this message translates to:
+  /// **'Tipo di file'**
+  String get discoverBooksFileTypeLabel;
+
+  /// No description provided for @discoverBooksFileTypeAny.
+  ///
+  /// In it, this message translates to:
+  /// **'Tutti'**
+  String get discoverBooksFileTypeAny;
+
+  /// No description provided for @discoverBooksSearchError.
+  ///
+  /// In it, this message translates to:
+  /// **'Ricerca non riuscita: {error}'**
+  String discoverBooksSearchError(Object error);
+
+  /// No description provided for @downloading.
+  ///
+  /// In it, this message translates to:
+  /// **'Scaricamento…'**
+  String get downloading;
+
+  /// No description provided for @downloadSuccessMessage.
+  ///
+  /// In it, this message translates to:
+  /// **'\"{title}\" scaricato e aggiunto alla libreria'**
+  String downloadSuccessMessage(Object title);
+
+  /// No description provided for @downloadErrorMessage.
+  ///
+  /// In it, this message translates to:
+  /// **'Download non riuscito, riprova'**
+  String get downloadErrorMessage;
+
+  /// No description provided for @downloadErrorMessageDetailed.
+  ///
+  /// In it, this message translates to:
+  /// **'Download non riuscito: {error}'**
+  String downloadErrorMessageDetailed(Object error);
 }
 
 class _AppLocalizationsDelegate

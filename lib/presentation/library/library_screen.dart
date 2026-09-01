@@ -10,8 +10,10 @@ import '../../domain/entities/book.dart';
 import '../../domain/entities/book_format.dart';
 import '../../domain/entities/shelf.dart';
 import '../../l10n/app_localizations.dart';
+import '../common/discover_books_unlock_controller.dart';
 import '../common/overlay_utils.dart';
 import '../common/providers.dart';
+import '../online_search/online_search_screen.dart';
 import '../reader/reader_screen.dart';
 import '../settings/settings_screen.dart';
 import '../statistics/statistics_screen.dart';
@@ -109,6 +111,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
     final l10n = AppLocalizations.of(context)!;
     final booksAsync = ref.watch(booksProvider);
     final shelvesAsync = ref.watch(shelvesProvider);
+    final discoverBooksUnlocked = ref.watch(discoverBooksUnlockedProvider);
 
     Shelf? selectedShelf;
     final shelvesList = shelvesAsync.valueOrNull;
@@ -125,6 +128,14 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
       appBar: AppBar(
         title: Text(selectedShelf?.name ?? l10n.myLibrary),
         actions: [
+          if (discoverBooksUnlocked)
+            IconButton(
+              icon: const Icon(Icons.travel_explore_outlined),
+              tooltip: l10n.discoverBooks,
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const OnlineSearchScreen()),
+              ),
+            ),
           IconButton(
             icon: const Icon(Icons.query_stats_outlined),
             tooltip: l10n.readingStats,

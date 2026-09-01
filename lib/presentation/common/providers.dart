@@ -2,6 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/covers/cover_extractor.dart';
 import '../../data/local/database/app_database.dart';
+import '../../data/online/composite_book_repository.dart';
+import '../../data/online/internet_archive_book_repository.dart';
+import '../../data/online/wikisource_book_repository.dart';
 import '../../data/repositories/drift_book_repository.dart';
 import '../../data/repositories/drift_filter_profile_repository.dart';
 import '../../data/repositories/drift_reading_progress_repository.dart';
@@ -14,6 +17,7 @@ import '../../domain/entities/shelf.dart';
 import '../../domain/repositories/book_repository.dart';
 import '../../domain/repositories/cover_extractor.dart';
 import '../../domain/repositories/filter_profile_repository.dart';
+import '../../domain/repositories/online_book_repository.dart';
 import '../../domain/repositories/reading_progress_repository.dart';
 import '../../domain/repositories/shelf_repository.dart';
 import '../../domain/usecases/delete_book_usecase.dart';
@@ -61,6 +65,13 @@ final deleteBookUseCaseProvider = Provider<DeleteBookUseCase>(
 );
 
 final updateCheckerProvider = Provider<UpdateChecker>((ref) => UpdateChecker());
+
+final onlineBookRepositoryProvider = Provider<OnlineBookRepository>(
+  (ref) => CompositeBookRepository(
+    InternetArchiveBookRepository(),
+    WikisourceBookRepository(),
+  ),
+);
 
 final deleteShelfUseCaseProvider = Provider<DeleteShelfUseCase>(
   (ref) => DeleteShelfUseCase(

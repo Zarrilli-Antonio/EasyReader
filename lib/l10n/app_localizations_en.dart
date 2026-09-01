@@ -306,4 +306,89 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get languageSpanish => 'Español';
+
+  @override
+  String get languageFrench => 'Français';
+
+  @override
+  String get languageGerman => 'Deutsch';
+
+  @override
+  String get discoverBooks => 'Discover books online';
+
+  @override
+  String get discoverBooksSourceLabel =>
+      'Project Gutenberg and Standard Ebooks via Internet Archive, plus Italian Wikisource — public domain';
+
+  @override
+  String get discoverBooksSourceFilterLabel => 'Source';
+
+  @override
+  String get discoverBooksSourceFilterAny => 'All';
+
+  @override
+  String get discoverBooksUnlockedMessage =>
+      '\"Discover books online\" section unlocked';
+
+  @override
+  String get discoverBooksHiddenMessage =>
+      '\"Discover books online\" section hidden again';
+
+  @override
+  String get discoverBooksSearchHint => 'Search by title or author…';
+
+  @override
+  String get discoverBooksEmptyHint =>
+      'Search a title or author to find public domain books to download.';
+
+  @override
+  String get discoverBooksNoResults => 'No books found';
+
+  @override
+  String get discoverBooksLoadMore => 'Load more results';
+
+  @override
+  String get discoverBooksSearchButton => 'Search';
+
+  @override
+  String get discoverBooksFilters => 'Filters';
+
+  @override
+  String get discoverBooksLanguageLabel => 'Language';
+
+  @override
+  String get discoverBooksLanguageAny => 'All languages';
+
+  @override
+  String get discoverBooksSubjectLabel => 'Genre';
+
+  @override
+  String get discoverBooksSubjectHint => 'e.g. poetry, adventure…';
+
+  @override
+  String get discoverBooksFileTypeLabel => 'File type';
+
+  @override
+  String get discoverBooksFileTypeAny => 'All';
+
+  @override
+  String discoverBooksSearchError(Object error) {
+    return 'Search failed: $error';
+  }
+
+  @override
+  String get downloading => 'Downloading…';
+
+  @override
+  String downloadSuccessMessage(Object title) {
+    return '\"$title\" downloaded and added to the library';
+  }
+
+  @override
+  String get downloadErrorMessage => 'Download failed, please try again';
+
+  @override
+  String downloadErrorMessageDetailed(Object error) {
+    return 'Download failed: $error';
+  }
 }

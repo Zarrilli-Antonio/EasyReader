@@ -307,4 +307,89 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get languageSpanish => 'Español';
+
+  @override
+  String get languageFrench => 'Français';
+
+  @override
+  String get languageGerman => 'Deutsch';
+
+  @override
+  String get discoverBooks => 'Scopri libri online';
+
+  @override
+  String get discoverBooksSourceLabel =>
+      'Project Gutenberg e Standard Ebooks via Internet Archive, più Wikisource in italiano — pubblico dominio';
+
+  @override
+  String get discoverBooksSourceFilterLabel => 'Fonte';
+
+  @override
+  String get discoverBooksSourceFilterAny => 'Tutte';
+
+  @override
+  String get discoverBooksUnlockedMessage =>
+      'Sezione \"Scopri libri online\" sbloccata';
+
+  @override
+  String get discoverBooksHiddenMessage =>
+      'Sezione \"Scopri libri online\" nascosta di nuovo';
+
+  @override
+  String get discoverBooksSearchHint => 'Cerca per titolo o autore…';
+
+  @override
+  String get discoverBooksEmptyHint =>
+      'Cerca un titolo o un autore per trovare libri di pubblico dominio da scaricare.';
+
+  @override
+  String get discoverBooksNoResults => 'Nessun libro trovato';
+
+  @override
+  String get discoverBooksLoadMore => 'Carica altri risultati';
+
+  @override
+  String get discoverBooksSearchButton => 'Cerca';
+
+  @override
+  String get discoverBooksFilters => 'Filtri';
+
+  @override
+  String get discoverBooksLanguageLabel => 'Lingua';
+
+  @override
+  String get discoverBooksLanguageAny => 'Tutte le lingue';
+
+  @override
+  String get discoverBooksSubjectLabel => 'Genere';
+
+  @override
+  String get discoverBooksSubjectHint => 'es. poesia, avventura…';
+
+  @override
+  String get discoverBooksFileTypeLabel => 'Tipo di file';
+
+  @override
+  String get discoverBooksFileTypeAny => 'Tutti';
+
+  @override
+  String discoverBooksSearchError(Object error) {
+    return 'Ricerca non riuscita: $error';
+  }
+
+  @override
+  String get downloading => 'Scaricamento…';
+
+  @override
+  String downloadSuccessMessage(Object title) {
+    return '\"$title\" scaricato e aggiunto alla libreria';
+  }
+
+  @override
+  String get downloadErrorMessage => 'Download non riuscito, riprova';
+
+  @override
+  String downloadErrorMessageDetailed(Object error) {
+    return 'Download non riuscito: $error';
+  }
 }

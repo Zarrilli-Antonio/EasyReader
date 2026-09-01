@@ -128,5 +128,39 @@
   "languageSystem": "Automatico (sistema)",
   "languageItalian": "Italiano",
   "languageEnglish": "English",
-  "languageSpanish": "Español"
+  "languageSpanish": "Español",
+  "languageFrench": "Français",
+  "languageGerman": "Deutsch",
+  "discoverBooks": "Scopri libri online",
+  "discoverBooksSourceLabel": "Project Gutenberg e Standard Ebooks via Internet Archive, più Wikisource in italiano — pubblico dominio",
+  "discoverBooksSourceFilterLabel": "Fonte",
+  "discoverBooksSourceFilterAny": "Tutte",
+  "discoverBooksUnlockedMessage": "Sezione \"Scopri libri online\" sbloccata",
+  "discoverBooksHiddenMessage": "Sezione \"Scopri libri online\" nascosta di nuovo",
+  "discoverBooksSearchHint": "Cerca per titolo o autore…",
+  "discoverBooksEmptyHint": "Cerca un titolo o un autore per trovare libri di pubblico dominio da scaricare.",
+  "discoverBooksNoResults": "Nessun libro trovato",
+  "discoverBooksLoadMore": "Carica altri risultati",
+  "discoverBooksSearchButton": "Cerca",
+  "discoverBooksFilters": "Filtri",
+  "discoverBooksLanguageLabel": "Lingua",
+  "discoverBooksLanguageAny": "Tutte le lingue",
+  "discoverBooksSubjectLabel": "Genere",
+  "discoverBooksSubjectHint": "es. poesia, avventura…",
+  "discoverBooksFileTypeLabel": "Tipo di file",
+  "discoverBooksFileTypeAny": "Tutti",
+  "discoverBooksSearchError": "Ricerca non riuscita: {error}",
+  "@discoverBooksSearchError": {
+    "placeholders": { "error": {} }
+  },
+  "downloading": "Scaricamento…",
+  "downloadSuccessMessage": "\"{title}\" scaricato e aggiunto alla libreria",
+  "@downloadSuccessMessage": {
+    "placeholders": { "title": {} }
+  },
+  "downloadErrorMessage": "Download non riuscito, riprova",
+  "downloadErrorMessageDetailed": "Download non riuscito: {error}",
+  "@downloadErrorMessageDetailed": {
+    "placeholders": { "error": {} }
+  }
 }

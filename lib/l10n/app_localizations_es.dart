@@ -307,4 +307,89 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get languageSpanish => 'Español';
+
+  @override
+  String get languageFrench => 'Français';
+
+  @override
+  String get languageGerman => 'Deutsch';
+
+  @override
+  String get discoverBooks => 'Descubrir libros en línea';
+
+  @override
+  String get discoverBooksSourceLabel =>
+      'Project Gutenberg y Standard Ebooks vía Internet Archive, más Wikisource en italiano — dominio público';
+
+  @override
+  String get discoverBooksSourceFilterLabel => 'Fuente';
+
+  @override
+  String get discoverBooksSourceFilterAny => 'Todas';
+
+  @override
+  String get discoverBooksUnlockedMessage =>
+      'Sección \"Descubrir libros en línea\" desbloqueada';
+
+  @override
+  String get discoverBooksHiddenMessage =>
+      'Sección \"Descubrir libros en línea\" oculta de nuevo';
+
+  @override
+  String get discoverBooksSearchHint => 'Busca por título o autor…';
+
+  @override
+  String get discoverBooksEmptyHint =>
+      'Busca un título o un autor para encontrar libros de dominio público para descargar.';
+
+  @override
+  String get discoverBooksNoResults => 'No se encontraron libros';
+
+  @override
+  String get discoverBooksLoadMore => 'Cargar más resultados';
+
+  @override
+  String get discoverBooksSearchButton => 'Buscar';
+
+  @override
+  String get discoverBooksFilters => 'Filtros';
+
+  @override
+  String get discoverBooksLanguageLabel => 'Idioma';
+
+  @override
+  String get discoverBooksLanguageAny => 'Todos los idiomas';
+
+  @override
+  String get discoverBooksSubjectLabel => 'Género';
+
+  @override
+  String get discoverBooksSubjectHint => 'ej. poesía, aventura…';
+
+  @override
+  String get discoverBooksFileTypeLabel => 'Tipo de archivo';
+
+  @override
+  String get discoverBooksFileTypeAny => 'Todos';
+
+  @override
+  String discoverBooksSearchError(Object error) {
+    return 'Búsqueda fallida: $error';
+  }
+
+  @override
+  String get downloading => 'Descargando…';
+
+  @override
+  String downloadSuccessMessage(Object title) {
+    return '\"$title\" descargado y añadido a la biblioteca';
+  }
+
+  @override
+  String get downloadErrorMessage => 'Descarga fallida, inténtalo de nuevo';
+
+  @override
+  String downloadErrorMessageDetailed(Object error) {
+    return 'Descarga fallida: $error';
+  }
 }

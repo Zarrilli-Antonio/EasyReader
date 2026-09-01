@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../common/discover_books_unlock_controller.dart';
 import '../common/locale_controller.dart';
 import '../filters/filter_providers.dart';
 
@@ -204,6 +206,8 @@ class SettingsScreen extends ConsumerWidget {
                 onChangeEnd: (_) => notifier.commit(),
               ),
             ],
+            const SizedBox(height: 32),
+            const _AppVersionFooter(),
           ],
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -225,6 +229,77 @@ class _SectionLabel extends StatelessWidget {
       style: Theme.of(
         context,
       ).textTheme.labelSmall?.copyWith(letterSpacing: 0.6),
+    );
+  }
+}
+
+/// Nome e versione dell'app: toccarlo 10 volte di fila (entro pochi secondi
+/// l'una dall'altra, altrimenti il conteggio riparte da zero) attiva o
+/// disattiva la sezione "Scopri libri online" — nascosta di default perché
+/// è una funzione sperimentale, non pensata per l'uso quotidiano.
+class _AppVersionFooter extends ConsumerStatefulWidget {
+  const _AppVersionFooter();
+
+  @override
+  ConsumerState<_AppVersionFooter> createState() => _AppVersionFooterState();
+}
+
+class _AppVersionFooterState extends ConsumerState<_AppVersionFooter> {
+  static const _tapsRequired = 10;
+  static const _tapTimeout = Duration(seconds: 2);
+
+  PackageInfo? _packageInfo;
+  int _tapCount = 0;
+  DateTime? _lastTapAt;
+
+  @override
+  void initState() {
+    super.initState();
+    PackageInfo.fromPlatform().then((info) {
+      if (mounted) setState(() => _packageInfo = info);
+    });
+  }
+
+  Future<void> _handleTap() async {
+    final now = DateTime.now();
+    if (_lastTapAt == null || now.difference(_lastTapAt!) > _tapTimeout) {
+      _tapCount = 0;
+    }
+    _lastTapAt = now;
+    _tapCount++;
+    if (_tapCount < _tapsRequired) return;
+    _tapCount = 0;
+
+    await ref.read(discoverBooksUnlockedProvider.notifier).toggle();
+    if (!mounted) return;
+    final unlocked = ref.read(discoverBooksUnlockedProvider);
+    final l10n = AppLocalizations.of(context)!;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          unlocked
+              ? l10n.discoverBooksUnlockedMessage
+              : l10n.discoverBooksHiddenMessage,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final info = _packageInfo;
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: _handleTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Center(
+          child: Text(
+            info == null ? '' : '${info.appName} v${info.version}',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ),
+      ),
     );
   }
 }

@@ -121,7 +121,16 @@ class ArchiveCoverExtractor implements CoverExtractor {
       (e) => e.getAttribute('name') == 'cover',
     )?.getAttribute('content');
     if (coverId == null) return null;
-    return _find(manifestItems, (e) => e.getAttribute('id') == coverId);
+    // Alcuni generatori (es. ws-export di Wikisource) puntano questo meta a
+    // una pagina XHTML del frontespizio invece che a un'immagine: senza
+    // controllare il media-type finirebbe copiato come se fosse la
+    // copertina, producendo un file immagine non valido.
+    return _find(
+      manifestItems,
+      (e) =>
+          e.getAttribute('id') == coverId &&
+          (e.getAttribute('media-type') ?? '').startsWith('image/'),
+    );
   }
 
   xml.XmlElement? _find(
